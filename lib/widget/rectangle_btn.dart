@@ -35,6 +35,7 @@ class RectangleBtnZin extends StatelessWidget {
     this.horizontal = 8,
     this.vertical = 8,
     this.width = double.infinity,
+    this.isFullWidth = false,
     required this.onTap,
   });
   final Color bgColor;
@@ -43,24 +44,23 @@ class RectangleBtnZin extends StatelessWidget {
   final double vertical;
   final double width;
   final VoidCallback? onTap;
+  final bool isFullWidth;
 
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      width: width.isNaN ? width : 100,
+      width: isFullWidth ? width : null,
       child: ElevatedButton(
         style: ButtonStyle(
-          // foregroundColor: MaterialStateProperty.all<Color>(whiteColor),
-          // overlayColor: MaterialStateProperty.all<Color>(whiteColor),
-          backgroundColor: MaterialStateProperty.all<Color>(bgColor),
+          backgroundColor: WidgetStateProperty.all<Color>(bgColor),
           enableFeedback: true,
-          shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+          shape: WidgetStateProperty.all<RoundedRectangleBorder>(
             RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(8),
             ),
           ),
-          elevation: MaterialStateProperty.all<double>(0),
-          padding: MaterialStateProperty.all<EdgeInsetsGeometry>(
+          elevation: WidgetStateProperty.all<double>(0),
+          padding: WidgetStateProperty.all<EdgeInsetsGeometry>(
             EdgeInsets.symmetric(horizontal: horizontal, vertical: vertical),
           ),
         ),

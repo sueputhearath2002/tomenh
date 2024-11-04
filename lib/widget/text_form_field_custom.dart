@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:tomnenh/style/colors.dart';
+import 'package:tomnenh/widget/text_style.dart';
 
 class TextFormFieldCustom extends StatelessWidget {
   const TextFormFieldCustom({
@@ -12,8 +13,10 @@ class TextFormFieldCustom extends StatelessWidget {
     this.isShowRequired = false,
     this.readOnly = false,
     this.suffixIcon,
+    this.prefixIcon,
     this.maxLine = 1,
     this.onTap,
+    this.fillColor = whiteColor,
   });
   final String? titleTextField;
   final String? hinText;
@@ -21,10 +24,12 @@ class TextFormFieldCustom extends StatelessWidget {
   final TextInputType? keyboardType;
   final bool obscureText;
   final Widget? suffixIcon;
+  final Widget? prefixIcon;
   final int maxLine;
   final bool isShowRequired;
   final bool readOnly;
   final VoidCallback? onTap;
+  final Color fillColor;
 
   @override
   Widget build(BuildContext context) {
@@ -35,11 +40,7 @@ class TextFormFieldCustom extends StatelessWidget {
           children: [
             Text(
               titleTextField ?? "",
-              style: const TextStyle(
-                fontWeight: FontWeight.w600,
-                color: greenColor,
-                fontSize: 14,
-              ),
+              style: TextStyles.bodyText(),
             ),
             const SizedBox(width: 8),
             Text(
@@ -61,22 +62,23 @@ class TextFormFieldCustom extends StatelessWidget {
           keyboardType: keyboardType,
           controller: textEditingController,
           decoration: InputDecoration(
+            prefixIcon: prefixIcon,
             suffixIcon: suffixIcon,
-            fillColor: green50Color.withOpacity(.1),
+            fillColor: fillColor,
             filled: true,
             contentPadding: const EdgeInsets.all(8),
             hintText: hinText,
             hintStyle: const TextStyle(
               fontWeight: FontWeight.normal,
-              color: green50Color,
+              color: textSearchColor,
             ),
             enabledBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(8),
-              borderSide: const BorderSide(color: green50Color, width: 0.5),
+              borderSide:  const BorderSide(color: textSearchColor,width: 0.3),
             ),
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(8),
-              borderSide: const BorderSide(color: green50Color, width: 0.5),
+              borderSide:  const BorderSide(color: textSearchColor,width: 0.3),
             ),
           ),
         )

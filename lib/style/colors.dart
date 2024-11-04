@@ -1,7 +1,11 @@
 import 'dart:ui';
 
-const whiteColor = const Color(0XFFFDF6FD);
-const greenColor = const Color(0XFF658864);
-const green50Color = const Color(0XFFB7B78A);
-const browColor = const Color(0XFFEEEEEE);
-const redColor = const Color(0xFFFF0000);
+const whiteColor = Color(0XFFffffff);
+const greenColor = Color(0XFF68a67d);
+const green50Color = Color(0XFF8FBF9F);
+const browColor = Color(0XFFffe4ff);
+const redColor = Color(0xFFFF0000);
+const greyColor = Color(0xFFf5f5f5);
+const blueColor = Color(0xFF187bcd);
+const textColor = Color(0xFF444648);
+const textSearchColor = Color(0xFFccccc0);

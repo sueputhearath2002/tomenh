@@ -1,5 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:tomnenh/screen/category_screen.dart';
+import 'package:tomnenh/screen/product_screen.dart';
 import 'package:tomnenh/style/assets.dart';
 import 'package:tomnenh/style/colors.dart';
 import 'package:tomnenh/widget/drawer_component.dart';
@@ -28,10 +30,21 @@ class DrawerPath extends StatelessWidget {
             profile(),
             DrawerComponent(
                 icon: product,
-                title: "Set up product",
-                onTap: () => Navigator.pushNamed(context, "/set_up_product")),
-            const DrawerComponent(icon: unit, title: "Set up Unit"),
-            const DrawerComponent(icon: customer, title: "Set up Customer"),
+                title: "Category",
+                onTap: () => Navigator.pushNamed(context, CategoryScreen.routeName)),
+            DrawerComponent(
+                icon: product,
+                title: "Product",
+                onTap: () => Navigator.pushNamed(context, ProductScreen.routeName)),
+            DrawerComponent(
+                icon: unit,
+                title: "Set up Unit",
+                onTap: () => Navigator.pushNamed(context, "/set_up_unit")),
+            DrawerComponent(
+              icon: customer,
+              title: "Set up Customer",
+              onTap: () => Navigator.pushNamed(context, "/set_up_customer"),
+            ),
             const DrawerComponent(icon: place, title: "Store or sell place"),
             const DrawerComponent(icon: status, title: "Set up status"),
             const Spacer(),

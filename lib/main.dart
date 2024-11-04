@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:tomnenh/navigators/navigator.dart';
 import 'package:tomnenh/style/colors.dart';
 
@@ -16,7 +17,13 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'Flutter Demo',
       theme: ThemeData(
-        appBarTheme: const AppBarTheme(color: whiteColor),
+        appBarTheme: const AppBarTheme(color: greyColor,surfaceTintColor: Colors.transparent),
+        fontFamily: GoogleFonts.dmSans().fontFamily,
+        scaffoldBackgroundColor: greyColor,
+
+        dividerTheme: const DividerThemeData(
+          color: Colors.transparent,
+        ),
         // colorScheme: ColorScheme.fromSeed(seedColor: Colors.white),
         useMaterial3: true,
       ),

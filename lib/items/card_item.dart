@@ -68,7 +68,10 @@ class CardItem extends StatelessWidget {
                           }),
                       const SizedBox(width: 16),
                       btnWidget(
-                          title: "View", icon: delete, bgColor: greenColor),
+                          title: "View",
+                          icon: delete,
+                          bgColor: greenColor,
+                          onTap: () {}),
                     ],
                   ),
                 ],
@@ -106,7 +109,7 @@ class CardItem extends StatelessWidget {
     return RectangleBtnZin(
       bgColor: bgColor,
       onTap: onTap,
-      horizontal: 16,
+      width: 100,
       child: Row(
         children: [
           SvgPicture.asset(

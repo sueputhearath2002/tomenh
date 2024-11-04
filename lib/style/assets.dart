@@ -15,3 +15,4 @@ const place = "assets/icons/product.svg";
 const delete = "assets/icons/delete.svg";
 const backSvg = "assets/icons/back.svg";
 const logoutSvg = "assets/icons/logout.svg";
+const noImage = "assets/images/no_img.jpg";
