@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:tomnenh/style/assets.dart';
 import 'package:tomnenh/style/colors.dart';
 import 'package:tomnenh/widget/text_form_field_custom.dart';
 
@@ -9,13 +8,13 @@ class DropDownWidget extends StatefulWidget {
     this.label = "",
     this.hinText = "",
     this.onTap,
-    this.listItem,
+    this.listItems,
   });
 
   final String label;
   final String hinText;
   final VoidCallback? onTap;
-  final List<dynamic>? listItem;
+  final List<dynamic>? listItems;
 
   @override
   State<DropDownWidget> createState() => _DropDownWidgetState();
@@ -48,7 +47,7 @@ class _DropDownWidgetState extends State<DropDownWidget> {
                 topRight: Radius.circular(16),
               ),
             ),
-            child: ListWithHeader(scrollController, widget.listItem ?? []),
+            child: ListWithHeader(scrollController, widget.listItems ?? []),
           ),
         );
       },
@@ -68,8 +67,8 @@ class _DropDownWidgetState extends State<DropDownWidget> {
 }
 
 class ListWithHeader extends StatelessWidget {
-  ListWithHeader(this.scrollController, this.listItem);
-  List<dynamic> listItem;
+  ListWithHeader(this.scrollController, this.listItems, {super.key});
+  List<dynamic> listItems;
   final ScrollController scrollController;
 
   @override
@@ -110,10 +109,14 @@ class ListWithHeader extends StatelessWidget {
         Expanded(
           child: ListView.builder(
             controller: scrollController,
-            itemCount: listItem.length ?? 0,
+            itemCount: listItems.length ?? 0,
             itemBuilder: (context, index) {
               return ListTile(
-                title: Text("Item $index"),
+                leading: const Icon(
+                  Icons.circle_outlined,
+                  color: greenColor,
+                ),
+                title: Text(listItems[index]),
               );
             },
           ),

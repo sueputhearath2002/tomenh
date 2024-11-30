@@ -18,7 +18,7 @@ class CategoryScreen extends StatelessWidget {
       floatingActionButton: FloatingActionButton(
         backgroundColor: greenColor,
         shape: const CircleBorder(),
-        onPressed: () =>Navigator.pushNamed(context,SetUpCategory.routeName),
+        onPressed: () => Navigator.pushNamed(context, SetUpCategory.routeName),
         child: const Icon(
           Icons.add,
           color: whiteColor,
@@ -32,8 +32,8 @@ class CategoryScreen extends StatelessWidget {
         padding: EdgeInsets.zero,
         itemCount: 10,
         itemBuilder: (context, index) {
-          return  Padding(
-            padding: const EdgeInsets.symmetric(vertical: 8,horizontal: 16),
+          return Padding(
+            padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
             child: Slidable(
               enabled: true,
               dragStartBehavior: DragStartBehavior.start,
@@ -42,28 +42,23 @@ class CategoryScreen extends StatelessWidget {
               endActionPane: ActionPane(
                 motion: const BehindMotion(),
                 extentRatio: 0.5,
-              dragDismissible: true,
+                dragDismissible: true,
                 children: [
-                  gapW8,
+                  gapW(8),
                   SlidableAction(
                     borderRadius: BorderRadius.circular(16),
                     backgroundColor: blueColor,
                     icon: Icons.edit,
-                    onPressed: (context) {
-                    },
+                    onPressed: (context) {},
                     label: 'Edit',
-
                   ),
-                  gapW8,
+                  gapW(8),
                   SlidableAction(
                     borderRadius: BorderRadius.circular(16),
                     backgroundColor: redColor,
                     icon: Icons.delete,
-                    onPressed: (context) {
-                      
-                    },
+                    onPressed: (context) {},
                     label: 'Delete',
-
                   ),
                 ],
               ),
@@ -71,18 +66,39 @@ class CategoryScreen extends StatelessWidget {
                 margin: EdgeInsets.zero,
                 elevation: 0,
                 color: whiteColor,
+
                 //margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
-                child: Row(
-                  children: [
-                    const ImageNetWorkWidget(width: 90, height: 90, imageUrl: ""),
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text("Category 1",style: TextStyles.bodyText(),),
-                        Text("Category 1 of description",style: TextStyles.baseStyle(color: textColor),),
-                      ],
-                    ),
-                  ],
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const ImageNetWorkWidget(
+                        width: 90,
+                        height: 90,
+                        imageUrl: "",
+                        topLeft: 8,
+                        topRight: 8,
+                        bottomLeft: 8,
+                        bottomRight: 8,
+                      ),
+                      gapW(8),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            "Category 1",
+                            style: TextStyles.bodyText(),
+                          ),
+                          gapH(8),
+                          Text(
+                            "Category 1 of description",
+                            style: TextStyles.baseStyle(color: textColor),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
                 ),
               ),
             ),

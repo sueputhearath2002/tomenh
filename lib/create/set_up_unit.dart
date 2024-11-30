@@ -4,7 +4,6 @@ import 'package:tomnenh/style/constant.dart';
 import 'package:tomnenh/widget/appbarCustome.dart';
 import 'package:tomnenh/widget/rectangle_btn.dart';
 import 'package:tomnenh/widget/text_form_field_custom.dart';
-import 'package:tomnenh/widget/upload_image.dart';
 
 class SetUpUnit extends StatelessWidget {
   const SetUpUnit({super.key});
@@ -31,23 +30,23 @@ class SetUpUnit extends StatelessWidget {
       appBar: const AppbarCustom(
         title: "Set up Unit",
       ),
-      body: const Padding(
-        padding: EdgeInsets.all(16),
+      body: Padding(
+        padding: const EdgeInsets.all(16),
         child: SingleChildScrollView(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              TextFormFieldCustom(
+              const TextFormFieldCustom(
                 titleTextField: "Unit code",
                 hinText: "Unit code",
               ),
-              gapH16,
-              TextFormFieldCustom(
+              gapH(16),
+              const TextFormFieldCustom(
                 titleTextField: "Unit Name",
                 hinText: "Unit Name",
               ),
-              gapH16,
-              TextFormFieldCustom(
+              gapH(16),
+              const TextFormFieldCustom(
                 titleTextField: "Description Unit",
                 hinText: "Description Unit",
               ),

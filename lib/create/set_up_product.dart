@@ -42,17 +42,17 @@ class SetupProduct extends StatelessWidget {
                   titleTextField: "Product code",
                   hinText: "product code",
                 ),
-                gapH16,
+                gapH(16),
                 const TextFormFieldCustom(
                   titleTextField: "Product Name",
                   hinText: "product Name",
                 ),
-                gapH16,
+                gapH(16),
                 const TextFormFieldCustom(
                   titleTextField: "Description product",
                   hinText: "Description Name",
                 ),
-                gapH16,
+                gapH(16),
                 const Text(
                   "Image product",
                   style: TextStyle(
@@ -61,7 +61,7 @@ class SetupProduct extends StatelessWidget {
                     fontSize: 14,
                   ),
                 ),
-                gapH8,
+                gapH(8),
                 Container(
                   width: double.infinity,
                   height: 200,
@@ -69,16 +69,16 @@ class SetupProduct extends StatelessWidget {
                   decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(8),
                       color: green50Color.withOpacity(.3)),
-                  child: const Column(
+                  child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Icon(
+                      const Icon(
                         Icons.image,
                         color: greenColor,
                         size: 40,
                       ),
-                      gapH8,
-                      Text("Upload image")
+                      gapH(8),
+                      const Text("Upload image")
                     ],
                   ),
                 ),

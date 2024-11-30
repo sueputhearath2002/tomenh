@@ -20,10 +20,10 @@ class CirCleBtn extends StatelessWidget {
   final double? width;
   final double? height;
   final Color colorContainer;
-  final Color? colorIconSvg;
+  final Color colorIconSvg;
   final double? paddingIconSvg;
   final bool? isShadow;
-  final bool? isRedNote;
+  final bool isRedNote;
 
   @override
   Widget build(BuildContext context) {
@@ -56,23 +56,22 @@ class CirCleBtn extends StatelessWidget {
                 width: 24,
                 height: 24,
                 fit: BoxFit.cover,
-                colorFilter: ColorFilter.mode(colorIconSvg!, BlendMode.srcIn),
+                colorFilter: ColorFilter.mode(colorIconSvg, BlendMode.srcIn),
               ),
             ),
           ),
         ),
-        isRedNote == true
-            ? Positioned(
-                top: 0,
-                right: 0,
-                child: Container(
-                  width: 8,
-                  height: 8,
-                  decoration: const BoxDecoration(
-                      color: greenColor, shape: BoxShape.circle),
-                ),
-              )
-            : const SizedBox()
+        if (isRedNote)
+          Positioned(
+            top: 0,
+            right: 0,
+            child: Container(
+              width: 8,
+              height: 8,
+              decoration: const BoxDecoration(
+                  color: greenColor, shape: BoxShape.circle),
+            ),
+          )
       ],
     );
   }

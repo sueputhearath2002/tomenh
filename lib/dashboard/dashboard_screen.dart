@@ -5,7 +5,9 @@ import 'package:syncfusion_flutter_charts/charts.dart';
 import 'package:tomnenh/drawer/drawer.dart';
 import 'package:tomnenh/style/assets.dart';
 import 'package:tomnenh/style/colors.dart';
+import 'package:tomnenh/style/constant.dart';
 import 'package:tomnenh/widget/circle_btn.dart';
+import 'package:tomnenh/widget/container_custome.dart';
 
 class ChartData {
   ChartData(this.x, this.y, this.color);
@@ -28,74 +30,38 @@ class DashboardScreen extends StatelessWidget {
     ChartData("Sun", 60, Colors.pink),
   ];
 
-  Map<String, dynamic> data = {
-    "record": [
-      {
-        "group": "", // Group for the record
-        "totalAmount": "",
-        "items": [
-          {
-            "id": 626,
-            "itemNo": "BEV-00019",
-            "group": "", // Group for the item
-            "description": "Hot Cappuccino - Medium",
-            "description2": "",
-            "quantity": 6.00,
-            "unitPrice": "\$4.09",
-            "subTotal": "\$12.27",
-            "discountAtm": "",
-            "amount": "\$12.27",
-            "imgUrl": ""
-          },
-          {
-            "id": 627,
-            "itemNo": "BEV-00081",
-            "group": "", // Different group for the item
-            "description": "Luna Iced Latte - Large",
-            "description2": "",
-            "quantity": 6.00,
-            "unitPrice": "\$4.09",
-            "subTotal": "\$24.54",
-            "discountAtm": "",
-            "amount": "\$24.54",
-            "imgUrl": ""
-          }
-        ]
-      },
-      {
-        "group": "group1", // Group for the record
-        "totalAmount": "",
-        "items": [
-          {
-            "id": 626,
-            "itemNo": "BEV-00019",
-            "group": "group1", // Group for the item
-            "description": "Hot Cappuccino - Medium",
-            "description2": "",
-            "quantity": 3.00,
-            "unitPrice": "\$4.09",
-            "subTotal": "\$12.27",
-            "discountAtm": "",
-            "amount": "\$12.27",
-            "imgUrl": ""
-          },
-          {
-            "id": 627,
-            "itemNo": "BEV-00081",
-            "group": "group1", // Different group for the item
-            "description": "Luna Iced Latte - Large",
-            "description2": "",
-            "quantity": 3.00,
-            "unitPrice": "\$4.09",
-            "subTotal": "\$24.54",
-            "discountAtm": "",
-            "amount": "\$24.54",
-            "imgUrl": ""
-          }
-        ]
-      }
-    ]
-  };
+  List<Map<String, dynamic>> componentsString = [
+    {
+      "icon": customerSvg,
+      "title": "Product",
+      "value": "70",
+    },
+    {
+      "icon": customerSvg,
+      "title": "Category",
+      "value": "70",
+    },
+    {
+      "icon": customerSvg,
+      "title": "Supplier",
+      "value": "70",
+    },
+    {
+      "icon": customerSvg,
+      "title": "Outgoing",
+      "value": "70",
+    },
+    {
+      "icon": customerSvg,
+      "title": "Customer",
+      "value": "70",
+    },
+    {
+      "icon": customerSvg,
+      "title": "Purchase",
+      "value": "70",
+    }
+  ];
 
   @override
   Widget build(BuildContext context) {
@@ -105,21 +71,36 @@ class DashboardScreen extends StatelessWidget {
         child: DrawerPath(),
       ),
       appBar: AppBar(
+        // shape: const RoundedRectangleBorder(
+        //   borderRadius: BorderRadius.vertical(
+        //     bottom: Radius.circular(70),
+        //   ),
+        // ),
+        //backgroundColor: green50Color,
         centerTitle: false,
-        leading: InkWell(
-          onTap: () => _key.currentState!.openDrawer(),
-          child: const Icon(
-            Icons.filter_list_outlined,
-            color: greenColor,
-          ),
+        titleSpacing: 8,
+        title: const Row(
+          children: [
+            // CirCleBtn(
+            //   onTap: () => _key.currentState!.openDrawer(),
+            //   width: 30,
+            //   height: 30,
+            //   isRedNote: true,
+            //   iconSvg: moreSvg,
+            //   paddingIconSvg: 8,
+            // ),
+            Text(
+              "Dashboard",
+              style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+            ),
+          ],
         ),
-        title: Image.asset("assets/images/tomnenh.png"),
         actions: const [
           Padding(
             padding: EdgeInsets.symmetric(vertical: 8, horizontal: 16),
             child: CirCleBtn(
-              width: 36,
-              height: 40,
+              width: 30,
+              height: 30,
               isRedNote: true,
               iconSvg: bellSvg,
               paddingIconSvg: 8,
@@ -127,60 +108,89 @@ class DashboardScreen extends StatelessWidget {
           ),
         ],
       ),
-      body: Column(
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              containerCus(icon: customerSvg, title: "Dashboard", value: "30"),
-              containerCus(icon: itemsSvg, title: "Items", value: "190"),
-            ],
-          ),
-          Flexible(
-              flex: 3,
-              child: SfCartesianChart(
-                  backgroundColor: Colors.transparent,
-                  primaryXAxis: const CategoryAxis(
-                      isVisible: true,
-                      labelStyle: TextStyle(overflow: TextOverflow.ellipsis),
-                      majorGridLines: MajorGridLines(width: 0)),
-                  series: <CartesianSeries<dynamic, dynamic>>[
-                    // Renders spline chart
-                    SplineSeries<ChartData, String>(
-                      dataLabelSettings:
-                          const DataLabelSettings(isVisible: true),
-                      enableTooltip: true,
-                      dataSource: chartData,
-                      pointColorMapper: (ChartData data, _) => data.color,
-                      xValueMapper: (ChartData data, _) =>
-                          data.x, // Map the day as a string
-                      yValueMapper: (ChartData data, _) =>
-                          data.y, // Map the value as a double
-                    ),
-                  ])),
-          Flexible(
-            flex: 2,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                subContainerCus(
-                  icon: listSvg,
-                  containerColor: greenColor,
-                  title: "View all List items",
-                  subTitle:
-                      "Display each Items with its name \n description and attribute",
+      body: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Container(
+              // decoration: BoxDecoration(
+              //     color: browColor, borderRadius: BorderRadius.circular(8)),
+              //: const EdgeInsets.all(16),
+              child: GridView.builder(
+                shrinkWrap: true,
+                physics: const NeverScrollableScrollPhysics(),
+                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: 3,
+                  childAspectRatio: 3 / 2.3,
+                  mainAxisSpacing: 16.0,
+                  crossAxisSpacing: 16.0,
                 ),
-                subContainerCus(
-                  icon: phoneSvg,
-                  containerColor: green50Color,
-                  title: "Contact Customer",
-                  subTitle:
-                      "Provide each contact's name, phone number, \nemail address, and other relevant details.",
-                ),
-              ],
+                padding: EdgeInsets.zero,
+                itemCount: componentsString.length,
+                itemBuilder: (context, index) {
+                  return ContainerCustom(
+                      icon: componentsString[index]["icon"],
+                      title: componentsString[index]["title"],
+                      value: componentsString[index]["value"]);
+                },
+              ),
             ),
-          ),
-        ],
+            gapH(8),
+            const Text(
+              "Graph ",
+              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+            ),
+            gapH(8),
+            SfCartesianChart(
+                // backgroundColor: green50Color,
+                // borderColor: greenColor,
+                primaryXAxis: const CategoryAxis(
+                    isVisible: true,
+                    labelStyle: TextStyle(
+                        overflow: TextOverflow.ellipsis,
+                        fontSize: 14,
+                        fontWeight: FontWeight.bold),
+                    arrangeByIndex: false,
+                    majorGridLines: MajorGridLines(width: 0)),
+                series: <CartesianSeries<dynamic, dynamic>>[
+                  SplineSeries<ChartData, String>(
+                    dataLabelSettings: const DataLabelSettings(
+                        isVisible: true, color: greenColor),
+                    enableTooltip: false,
+                    dataSource: chartData,
+                    color: greenColor,
+                    //pointColorMapper: (ChartData data, _) => data.color,
+                    xValueMapper: (ChartData data, _) =>
+                        data.x, // Map the day as a string
+                    yValueMapper: (ChartData data, _) =>
+                        data.y, // Map the value as a double
+                  ),
+                ]),
+            // Flexible(
+            //   flex: 2,
+            //   child: Column(
+            //     crossAxisAlignment: CrossAxisAlignment.start,
+            //     children: [
+            //       subContainerCus(
+            //         icon: listSvg,
+            //         containerColor: greenColor,
+            //         title: "View all List items",
+            //         subTitle:
+            //             "Display each Items with its name \n description and attribute",
+            //       ),
+            //       subContainerCus(
+            //         icon: phoneSvg,
+            //         containerColor: green50Color,
+            //         title: "Contact Customer",
+            //         subTitle:
+            //             "Provide each contact's name, phone number, \nemail address, and other relevant details.",
+            //       ),
+            //     ],
+            //   ),
+            // ),
+          ],
+        ),
       ),
     );
   }
@@ -347,42 +357,6 @@ class DashboardScreen extends StatelessWidget {
               )
             ],
           ),
-        ),
-      ),
-    );
-  }
-
-  Widget containerCus({String? title, String? value, String? icon}) {
-    return Expanded(
-      child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
-        decoration: const BoxDecoration(
-            gradient: LinearGradient(colors: [green50Color, greenColor])),
-        child: Row(
-          children: [
-            SvgPicture.asset(icon ?? ""),
-            const SizedBox(width: 16),
-            Column(
-              children: [
-                Text(
-                  title ?? "",
-                  style: const TextStyle(
-                    fontSize: 16,
-                    color: whiteColor,
-                    fontWeight: FontWeight.w600,
-                  ),
-                ),
-                Text(
-                  value ?? "",
-                  style: const TextStyle(
-                    fontSize: 20,
-                    color: whiteColor,
-                    fontWeight: FontWeight.w600,
-                  ),
-                )
-              ],
-            )
-          ],
         ),
       ),
     );

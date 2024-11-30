@@ -4,7 +4,6 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:tomnenh/style/assets.dart';
 
-
 class ImageNetWorkWidget extends StatelessWidget {
   const ImageNetWorkWidget({
     super.key,
@@ -34,14 +33,13 @@ class ImageNetWorkWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
     if (getImgUrl == "") {
       return Container(
         key: key,
         width: width,
         height: height,
         decoration: BoxDecoration(
-          image:  DecorationImage(
+          image: DecorationImage(
             image: AssetImage(noImage),
             fit: BoxFit.cover,
           ),
@@ -86,7 +84,7 @@ class ImageNetWorkWidget extends StatelessWidget {
           width: width,
           height: height,
           decoration: BoxDecoration(
-            image:  DecorationImage(
+            image: const DecorationImage(
               image: AssetImage(noImage),
               fit: BoxFit.cover,
             ),
@@ -99,7 +97,7 @@ class ImageNetWorkWidget extends StatelessWidget {
           width: width,
           height: height,
           decoration: BoxDecoration(
-            image:  DecorationImage(
+            image: const DecorationImage(
               image: AssetImage(noImage),
               fit: BoxFit.cover,
             ),

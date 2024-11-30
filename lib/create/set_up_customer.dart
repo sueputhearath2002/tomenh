@@ -11,6 +11,7 @@ class SetUpCustomer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    List<String> genders = ["Male", "Female"];
     return Scaffold(
       persistentFooterButtons: [
         RectangleBtnZin(
@@ -31,28 +32,29 @@ class SetUpCustomer extends StatelessWidget {
       appBar: const AppbarCustom(
         title: "Set up Customer",
       ),
-      body: const Padding(
-        padding: EdgeInsets.all(16),
+      body: Padding(
+        padding: const EdgeInsets.all(16),
         child: SingleChildScrollView(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              TextFormFieldCustom(
+              const TextFormFieldCustom(
                 titleTextField: "Customer code",
                 hinText: "Customer code",
               ),
-              gapH16,
-              TextFormFieldCustom(
+              gapH(16),
+              const TextFormFieldCustom(
                 titleTextField: "Customer Name",
                 hinText: "Customer Name",
               ),
-              gapH16,
+              gapH(16),
               DropDownWidget(
                 label: "Gender",
                 hinText: "Male",
+                listItems: genders,
               ),
-              gapH16,
-              TextFormFieldCustom(
+              gapH(16),
+              const TextFormFieldCustom(
                 titleTextField: "Description Unit",
                 hinText: "Description Unit",
               ),

@@ -83,7 +83,7 @@ class _MainScreenState extends State<MainScreen> {
         items: List.generate(
           listOfIcons.length,
           (index) => BottomNavigationBarItem(
-            backgroundColor: greenColor,
+            //backgroundColor: greenColor,
             icon: Padding(
               padding: const EdgeInsets.all(8.0),
               child: SvgPicture.asset(

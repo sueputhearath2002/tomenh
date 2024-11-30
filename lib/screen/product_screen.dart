@@ -1,5 +1,3 @@
-
-
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
@@ -12,7 +10,7 @@ import 'package:tomnenh/widget/text_style.dart';
 
 class ProductScreen extends StatelessWidget {
   const ProductScreen({super.key});
-  static const String routeName ="/product";
+  static const String routeName = "/product";
 
   @override
   Widget build(BuildContext context) {
@@ -20,7 +18,7 @@ class ProductScreen extends StatelessWidget {
       floatingActionButton: FloatingActionButton(
         backgroundColor: greenColor,
         shape: const CircleBorder(),
-        onPressed: (){},
+        onPressed: () {},
         child: const Icon(
           Icons.add,
           color: whiteColor,
@@ -34,8 +32,8 @@ class ProductScreen extends StatelessWidget {
         padding: EdgeInsets.zero,
         itemCount: 10,
         itemBuilder: (context, index) {
-          return  Padding(
-            padding: const EdgeInsets.symmetric(vertical: 8,horizontal: 16),
+          return Padding(
+            padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
             child: Slidable(
               enabled: true,
               dragStartBehavior: DragStartBehavior.start,
@@ -46,26 +44,21 @@ class ProductScreen extends StatelessWidget {
                 extentRatio: 0.5,
                 dragDismissible: true,
                 children: [
-                  gapW8,
+                  gapW(8),
                   SlidableAction(
                     borderRadius: BorderRadius.circular(16),
                     backgroundColor: blueColor,
                     icon: Icons.edit,
-                    onPressed: (context) {
-                    },
+                    onPressed: (context) {},
                     label: 'Edit',
-
                   ),
-                  gapW8,
+                  gapW(8),
                   SlidableAction(
                     borderRadius: BorderRadius.circular(16),
                     backgroundColor: redColor,
                     icon: Icons.delete,
-                    onPressed: (context) {
-
-                    },
+                    onPressed: (context) {},
                     label: 'Delete',
-
                   ),
                 ],
               ),
@@ -77,17 +70,37 @@ class ProductScreen extends StatelessWidget {
                   padding: const EdgeInsets.all(4),
                   child: Row(
                     children: [
-                      const ImageNetWorkWidget(width: 100, height: 100, imageUrl: "https://brainmatics.id/wp-content/uploads/2016/03/book-4.jpg"),
-                      gapW16,
+                      const ImageNetWorkWidget(
+                          width: 100,
+                          height: 100,
+                          imageUrl:
+                              "https://brainmatics.id/wp-content/uploads/2016/03/book-4.jpg"),
+                      gapW(16),
                       Expanded(
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text("Category 1",style: TextStyles.bodyText(),),
-                            Text("Category 1 of description",style: TextStyles.baseStyle(color: textColor),),
+                            Text(
+                              "Category 1",
+                              style: TextStyles.bodyText(),
+                            ),
+                            Text(
+                              "Category 1 of description",
+                              style: TextStyles.baseStyle(color: textColor),
+                            ),
                             const SizedBox(height: 8),
                             const MySeparator(color: Colors.grey, height: 0.2),
-                            Chip(label: Text("50 items",style: TextStyles.caption(color:whiteColor),),backgroundColor: Colors.green.withOpacity(0.8),elevation: 0,side: BorderSide(style: BorderStyle.solid,color: Colors.transparent),),
+                            Chip(
+                              label: Text(
+                                "50 items",
+                                style: TextStyles.caption(color: whiteColor),
+                              ),
+                              backgroundColor: Colors.green.withOpacity(0.8),
+                              elevation: 0,
+                              side: BorderSide(
+                                  style: BorderStyle.solid,
+                                  color: Colors.transparent),
+                            ),
                           ],
                         ),
                       ),

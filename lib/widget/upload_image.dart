@@ -14,16 +14,16 @@ class UploadImage extends StatelessWidget {
       decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(8),
           color: green50Color.withOpacity(.3)),
-      child: const Column(
+      child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Icon(
+          const Icon(
             Icons.image,
             color: greenColor,
             size: 40,
           ),
-          gapH8,
-          Text("Upload image")
+          gapH(8),
+          const Text("Upload image")
         ],
       ),
     );

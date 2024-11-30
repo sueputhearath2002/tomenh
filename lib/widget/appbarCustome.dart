@@ -6,7 +6,7 @@ import 'package:tomnenh/widget/circle_btn.dart';
 import 'package:tomnenh/widget/text_form_field_custom.dart';
 
 class AppbarCustom extends StatelessWidget implements PreferredSizeWidget {
-  const AppbarCustom({super.key, this.title = "",  this.isShowSearch = false});
+  const AppbarCustom({super.key, this.title = "", this.isShowSearch = false});
   final String title;
   final bool isShowSearch;
 
@@ -27,28 +27,34 @@ class AppbarCustom extends StatelessWidget implements PreferredSizeWidget {
                 onTap: () => Navigator.pop(context),
                 colorContainer: whiteColor,
               ),
-              gapW16,
+              gapW(16),
               Text(title),
             ],
           ),
         ],
       ),
-
-      bottom:isShowSearch? PreferredSize( preferredSize: preferredSize, child:searchWidget() ):null,
+      bottom: isShowSearch
+          ? PreferredSize(preferredSize: preferredSize, child: searchWidget())
+          : null,
     );
   }
-  Widget searchWidget(){
+
+  Widget searchWidget() {
     return const Padding(
-      padding: EdgeInsets.only(left: 16,right: 16),
+      padding: EdgeInsets.only(left: 16, right: 16),
       child: TextFormFieldCustom(
         titleTextField: "",
         hinText: "Search",
-        prefixIcon: Icon(Icons.search,color: textColor,),
+        prefixIcon: Icon(
+          Icons.search,
+          color: textColor,
+        ),
       ),
     );
   }
 
   @override
   // TODO: implement preferredSize
-  Size get preferredSize =>  Size.fromHeight(isShowSearch?kToolbarHeight+60:kToolbarHeight);
+  Size get preferredSize =>
+      Size.fromHeight(isShowSearch ? kToolbarHeight + 60 : kToolbarHeight);
 }
