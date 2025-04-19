@@ -36,21 +36,22 @@ class TextFormFieldCustom extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Row(
-          children: [
-            Text(
-              titleTextField ?? "",
-              style: TextStyles.bodyText(),
-            ),
-            const SizedBox(width: 8),
-            Text(
-              isShowRequired ? "required" : "",
-              style: const TextStyle(
-                color: redColor,
+        if (titleTextField != null)
+          Row(
+            children: [
+              Text(
+                titleTextField ?? "",
+                style: TextStyles.bodyText(),
               ),
-            ),
-          ],
-        ),
+              const SizedBox(width: 8),
+              Text(
+                isShowRequired ? "required" : "",
+                style: const TextStyle(
+                  color: redColor,
+                ),
+              ),
+            ],
+          ),
         const SizedBox(
           height: 4,
         ),
@@ -72,13 +73,15 @@ class TextFormFieldCustom extends StatelessWidget {
               fontWeight: FontWeight.normal,
               color: textSearchColor,
             ),
-            enabledBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(8),
-              borderSide:  const BorderSide(color: textSearchColor,width: 0.3),
+            enabledBorder: const UnderlineInputBorder(
+              borderSide: BorderSide(color: cardColor, width: 0.5),
+            ),
+            focusedBorder: const UnderlineInputBorder(
+              borderSide: BorderSide(color: cardColor, width: 0.5),
             ),
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(8),
-              borderSide:  const BorderSide(color: textSearchColor,width: 0.3),
+              borderSide: const BorderSide(color: cardColor, width: 0.3),
             ),
           ),
         )

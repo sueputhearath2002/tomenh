@@ -9,8 +9,8 @@ class DrawerComponent extends StatelessWidget {
     required this.title,
     this.onTap,
     this.isShowDivider = true,
-    this.titleColor = whiteColor,
-    this.iconColor = whiteColor,
+    this.titleColor = textColor,
+    this.iconColor = textColor,
   });
 
   final String icon;
@@ -24,39 +24,18 @@ class DrawerComponent extends StatelessWidget {
   Widget build(BuildContext context) {
     return InkWell(
       onTap: onTap,
-      child: Column(
-        children: [
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 16),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Row(
-                  children: [
-                    SvgPicture.asset(icon,
-                        colorFilter:
-                            ColorFilter.mode(iconColor, BlendMode.srcIn)),
-                    const SizedBox(width: 8),
-                    Text(
-                      title,
-                      style: TextStyle(color: titleColor),
-                    ),
-                  ],
-                ),
-                const Icon(
-                  Icons.arrow_forward_ios,
-                  color: whiteColor,
-                  size: 18,
-                ),
-              ],
-            ),
-          ),
-          if (isShowDivider)
-            const Divider(
-              thickness: 0.5,
-              color: whiteColor,
-            ),
-        ],
+      child: ListTile(
+        leading: SvgPicture.asset(icon,
+            colorFilter: ColorFilter.mode(iconColor, BlendMode.srcIn)),
+        title: Text(
+          title,
+          style: TextStyle(color: titleColor),
+        ),
+        trailing: const Icon(
+          Icons.arrow_forward_ios,
+          color: textSearchColor,
+          size: 18,
+        ),
       ),
     );
   }

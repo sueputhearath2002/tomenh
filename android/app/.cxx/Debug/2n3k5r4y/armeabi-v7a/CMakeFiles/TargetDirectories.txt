@@ -1,0 +1,2 @@
+/Users/sueputhearath/StudioProjects/tomnenh/android/app/.cxx/Debug/2n3k5r4y/armeabi-v7a/CMakeFiles/edit_cache.dir
+/Users/sueputhearath/StudioProjects/tomnenh/android/app/.cxx/Debug/2n3k5r4y/armeabi-v7a/CMakeFiles/rebuild_cache.dir

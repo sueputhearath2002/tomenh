@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:tomnenh/injection.dart';
 import 'package:tomnenh/navigators/navigator.dart';
 import 'package:tomnenh/style/colors.dart';
 
-void main() {
+void main() async {
+  await initLocator();
   runApp(const MyApp());
 }
 
@@ -15,11 +17,11 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      title: 'Flutter Demo',
       theme: ThemeData(
-        appBarTheme: const AppBarTheme(color: greyColor,surfaceTintColor: Colors.transparent),
+        appBarTheme: const AppBarTheme(
+            color: greyColor, surfaceTintColor: Colors.transparent),
         fontFamily: GoogleFonts.dmSans().fontFamily,
-        scaffoldBackgroundColor: greyColor,
+        scaffoldBackgroundColor: whiteColor,
 
         dividerTheme: const DividerThemeData(
           color: Colors.transparent,

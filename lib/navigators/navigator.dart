@@ -6,11 +6,17 @@ import 'package:tomnenh/create/set_up_unit.dart';
 import 'package:tomnenh/dashboard/dashboard_screen.dart';
 import 'package:tomnenh/main_screen.dart';
 import 'package:tomnenh/screen/category_screen.dart';
+import 'package:tomnenh/screen/login_screen.dart';
 import 'package:tomnenh/screen/product_screen.dart';
+import 'package:tomnenh/screen/sign_up_screen.dart';
+import 'package:tomnenh/screen/upload_face_detection_screen.dart';
+import 'package:tomnenh/upload_image_with_ml_kit/upload_image_screen.dart';
 
 class AppNavigator {
   static Route<dynamic>? appRoute({required RouteSettings settings}) {
     switch (settings.name) {
+      case '/':
+        return MaterialPageRoute(builder: (_) => const MainScreen());
       case '/dashboard':
         return MaterialPageRoute(builder: (_) => DashboardScreen());
       case '/set_up_product':
@@ -19,12 +25,21 @@ class AppNavigator {
         return MaterialPageRoute(builder: (_) => const SetUpUnit());
       case '/set_up_customer':
         return MaterialPageRoute(builder: (_) => const SetUpCustomer());
+      case '/upload_image':
+        return MaterialPageRoute(builder: (_) => const UploadImageScreen());
+      case '/login':
+        return MaterialPageRoute(builder: (_) => LoginScreen());
+      case '/register':
+        return MaterialPageRoute(builder: (_) => SignUpScreen());
       case SetUpCategory.routeName:
         return MaterialPageRoute(builder: (_) => const SetUpCategory());
       case CategoryScreen.routeName:
         return MaterialPageRoute(builder: (_) => const CategoryScreen());
-        case ProductScreen.routeName:
+      case ProductScreen.routeName:
         return MaterialPageRoute(builder: (_) => const ProductScreen());
+      case UploadFaceDetectionScreen.routeName:
+        return MaterialPageRoute(
+            builder: (_) => const UploadFaceDetectionScreen());
       // case '/details':
       //   final args = settings.arguments as DetailsArguments;
       //   return MaterialPageRoute(builder: (_) => DetailsScreen(args: args));

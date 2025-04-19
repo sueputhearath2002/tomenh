@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:tomnenh/dashboard/dashboard_screen.dart';
-import 'package:tomnenh/items/items_screen.dart';
-import 'package:tomnenh/style/assets.dart';
+import 'package:tomnenh/screen/list_attendance_screen.dart';
+import 'package:tomnenh/screen/upload_face_detection_screen.dart';
 import 'package:tomnenh/style/colors.dart';
 
 class MainScreen extends StatefulWidget {
@@ -13,96 +12,120 @@ class MainScreen extends StatefulWidget {
 }
 
 class _MainScreenState extends State<MainScreen> {
-  List<String> listOfIcons = [
-    dashboardSvg,
-    listItems,
+  List<IconData> listOfIcons = [
+    Icons.dashboard,
+    Icons.featured_play_list_rounded,
   ];
   List<String> listLabel = [
-    "Dashboard",
-    "Items",
+    "Today",
+    "Month",
   ];
   List<Widget> listOfWidget = [
     DashboardScreen(),
-    ItemsScreen(),
+    ListAttendanceScreen(),
   ];
   PageController pageController =
       PageController(viewportFraction: 1, keepPage: true);
   int selectIndex = 0;
-  // final screenCubit = HomeCubit();
-
-  @override
-  void initState() {
-    super.initState();
-  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: pageViewCustome(),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-      floatingActionButton: Padding(
-        padding: const EdgeInsets.only(top: 20),
-        child: SizedBox(
-          width: 50,
-          height: 50,
-          child: FloatingActionButton(
-            shape: const CircleBorder(side: BorderSide(color: green50Color)),
-            backgroundColor: greenColor,
-            child: const Icon(
-              Icons.add,
-              color: whiteColor,
-            ),
-            onPressed: () {
-              setState(() {
-                // print(listOfIcons[0]);
-                //selectIndex = index;
-                // pageController.jumpToPage(2);
-              });
-              //Navigator.pushNamed(context, CartScreen.routeName);
-            },
-          ),
-        ),
-      ),
-      bottomNavigationBar: BottomNavigationBar(
-        currentIndex: selectIndex,
-        elevation: 2,
-        onTap: (value) {
-          setState(() {
-            selectIndex = value;
-          });
-          pageController.jumpToPage(selectIndex);
-        },
-        selectedItemColor: whiteColor,
-        unselectedItemColor: green50Color,
-        showSelectedLabels: true,
-        showUnselectedLabels: true,
-        unselectedLabelStyle:
-            const TextStyle(color: green50Color, fontSize: 14),
-        enableFeedback: true,
-        backgroundColor: greenColor,
-        items: List.generate(
-          listOfIcons.length,
-          (index) => BottomNavigationBarItem(
-            //backgroundColor: greenColor,
-            icon: Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: SvgPicture.asset(
-                listOfIcons[index].toString(),
-                colorFilter: ColorFilter.mode(
-                    selectIndex == index ? whiteColor : green50Color,
-                    BlendMode.srcIn),
-                width: 26,
-                height: 26,
+        body: pageViewCustom(),
+        floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+        floatingActionButton: Padding(
+          padding: const EdgeInsets.only(top: 30),
+          child: SizedBox(
+            width: 50,
+            height: 50,
+            child: FloatingActionButton(
+              elevation: 0,
+              shape: const CircleBorder(side: BorderSide(color: mainColor)),
+              backgroundColor: mainColor,
+              child: const Icon(
+                Icons.add,
+                color: whiteColor,
               ),
+              onPressed: () {
+                Navigator.pushNamed(
+                    context, UploadFaceDetectionScreen.routeName);
+              },
             ),
-            label: listLabel[index],
           ),
         ),
-      ),
-    );
+        bottomNavigationBar: NavigationBar(
+            selectedIndex: selectIndex,
+            elevation: 2,
+            indicatorColor: secondaryColor,
+            surfaceTintColor: whiteColor,
+            backgroundColor: whiteColor,
+            height: 65,
+            onDestinationSelected: (int index) {
+              setState(() {
+                selectIndex = index;
+              });
+              pageController.jumpToPage(selectIndex);
+            },
+            destinations: [
+              NavigationDestination(
+                icon: Icon(
+                  Icons.dashboard,
+                  color: selectIndex == 0 ? mainColor : textSearchColor,
+                ),
+                label: 'Dashboard',
+              ),
+              NavigationDestination(
+                icon: Icon(
+                  Icons.event_note,
+                  color: selectIndex == 1 ? mainColor : textSearchColor,
+                ),
+                label: 'Report',
+              ),
+            ])
+        // BottomNavigationBar(
+        //   currentIndex: selectIndex,
+        //   elevation: 2,
+        //   onTap: (value) {
+        //     setState(() {
+        //       selectIndex = value;
+        //     });
+        //     pageController.jumpToPage(selectIndex);
+        //   },
+        //   selectedItemColor: greenColor,
+        //   unselectedItemColor: green50Color,
+        //   showSelectedLabels: true,
+        //   showUnselectedLabels: true,
+        //   unselectedLabelStyle:
+        //       const TextStyle(color: green50Color, fontSize: 14),
+        //   enableFeedback: true,
+        //   backgroundColor: whiteColor,
+        //   items: List.generate(
+        //     listOfIcons.length,
+        //     (index) => BottomNavigationBarItem(
+        //       //backgroundColor: greenColor,
+        //       icon: Padding(
+        //         padding: const EdgeInsets.all(8.0),
+        //         child: Icon(
+        //           listOfIcons[index],
+        //           size: 20,
+        //         ),
+        //         // child: SvgPicture.asset(
+        //         //   listOfIcons[index].toString(),
+        //         //   colorFilter: ColorFilter.mode(
+        //         //       selectIndex == index ? greenColor : green50Color,
+        //         //       BlendMode.srcIn),
+        //         //   width: 26,
+        //         //   height: 26,
+        //         // ),
+        //       ),
+        //       label: listLabel[index],
+        //     ),
+        //   ),
+        // ),
+        );
   }
 
-  Widget pageViewCustome() {
+  Widget pageViewCustom() {
     return PageView(
       physics: const NeverScrollableScrollPhysics(),
       controller: pageController,

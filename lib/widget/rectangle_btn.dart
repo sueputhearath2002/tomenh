@@ -30,7 +30,7 @@ class RectangleBtn extends StatelessWidget {
 class RectangleBtnZin extends StatelessWidget {
   const RectangleBtnZin({
     super.key,
-    this.bgColor = greenColor,
+    this.bgColor = mainColor,
     this.child,
     this.horizontal = 8,
     this.vertical = 8,

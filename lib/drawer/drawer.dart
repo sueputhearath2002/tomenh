@@ -15,48 +15,46 @@ class DrawerPath extends StatelessWidget {
   }
 
   Widget buildDrawer(BuildContext context) {
-    return Container(
-      decoration: const BoxDecoration(
-        gradient: LinearGradient(
-          colors: [greenColor, green50Color],
-          begin: Alignment.topCenter,
-          end: Alignment.bottomCenter,
-        ),
-      ),
-      child: SafeArea(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            profile(),
-            DrawerComponent(
-                icon: product,
-                title: "Category",
-                onTap: () => Navigator.pushNamed(context, CategoryScreen.routeName)),
-            DrawerComponent(
-                icon: product,
-                title: "Product",
-                onTap: () => Navigator.pushNamed(context, ProductScreen.routeName)),
-            DrawerComponent(
-                icon: unit,
-                title: "Set up Unit",
-                onTap: () => Navigator.pushNamed(context, "/set_up_unit")),
-            DrawerComponent(
-              icon: customer,
-              title: "Set up Customer",
-              onTap: () => Navigator.pushNamed(context, "/set_up_customer"),
-            ),
-            const DrawerComponent(icon: place, title: "Store or sell place"),
-            const DrawerComponent(icon: status, title: "Set up status"),
-            const Spacer(),
-            const DrawerComponent(
-                icon: logoutSvg,
-                title: "Logout Account",
-                isShowDivider: true,
-                titleColor: redColor,
-                iconColor: redColor),
-            nameCompany(),
-          ],
-        ),
+    return SafeArea(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          profile(),
+          DrawerComponent(
+              icon: product,
+              title: "Category",
+              onTap: () =>
+                  Navigator.pushNamed(context, CategoryScreen.routeName)),
+          DrawerComponent(
+              icon: product,
+              title: "Product",
+              onTap: () =>
+                  Navigator.pushNamed(context, ProductScreen.routeName)),
+          DrawerComponent(
+              icon: unit,
+              title: "Set up Unit",
+              onTap: () => Navigator.pushNamed(context, "/set_up_unit")),
+          DrawerComponent(
+            icon: customer,
+            title: "Set up Customer",
+            onTap: () => Navigator.pushNamed(context, "/set_up_customer"),
+          ),
+          DrawerComponent(
+            icon: customer,
+            title: "Upload Image",
+            onTap: () => Navigator.pushNamed(context, "/upload_image"),
+          ),
+          const DrawerComponent(icon: place, title: "Store or sell place"),
+          const DrawerComponent(icon: status, title: "Set up status"),
+          const Spacer(),
+          const DrawerComponent(
+              icon: logoutSvg,
+              title: "Logout Account",
+              isShowDivider: true,
+              titleColor: redColor,
+              iconColor: redColor),
+          nameCompany(),
+        ],
       ),
     );
   }
@@ -68,11 +66,12 @@ class DrawerPath extends StatelessWidget {
         TextSpan(
           children: [
             TextSpan(
-                text: "Power by : ",
-                style: TextStyle(fontSize: 14, color: whiteColor)),
-            TextSpan(
-              text: "Sue puthearath",
-              style: TextStyle(fontSize: 12, color: whiteColor),
+              text: "POWER BY @SUE PUTHEARATH",
+              style: TextStyle(
+                fontSize: 14,
+                fontWeight: FontWeight.bold,
+                color: blueColor,
+              ),
             ),
           ],
         ),
@@ -112,7 +111,7 @@ class DrawerPath extends StatelessWidget {
                       "User Name",
                       style: TextStyle(
                           fontWeight: FontWeight.w600,
-                          fontSize: 20,
+                          fontSize: 16,
                           color: whiteColor),
                     ),
                     Text(

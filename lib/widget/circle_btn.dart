@@ -7,11 +7,11 @@ class CirCleBtn extends StatelessWidget {
     super.key,
     required this.iconSvg,
     this.onTap,
-    this.width = 56,
-    this.height = 56,
-    this.colorContainer = browColor,
-    this.colorIconSvg = greenColor,
-    this.paddingIconSvg = 16,
+    this.width = 30,
+    this.height = 30,
+    this.colorContainer = greyColor,
+    this.colorIconSvg = textColor,
+    this.paddingIconSvg = 8,
     this.isShadow = false,
     this.isRedNote = false,
   });
@@ -53,8 +53,8 @@ class CirCleBtn extends StatelessWidget {
               padding: EdgeInsets.all(paddingIconSvg!),
               child: SvgPicture.asset(
                 iconSvg,
-                width: 24,
-                height: 24,
+                width: width,
+                height: height,
                 fit: BoxFit.cover,
                 colorFilter: ColorFilter.mode(colorIconSvg, BlendMode.srcIn),
               ),
@@ -68,8 +68,8 @@ class CirCleBtn extends StatelessWidget {
             child: Container(
               width: 8,
               height: 8,
-              decoration: const BoxDecoration(
-                  color: greenColor, shape: BoxShape.circle),
+              decoration:
+                  const BoxDecoration(color: redColor, shape: BoxShape.circle),
             ),
           )
       ],
