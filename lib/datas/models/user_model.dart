@@ -21,13 +21,15 @@ class UserModel {
   factory UserModel.fromJson(Map<String, dynamic> json) => UserModel(
         token: json["token"] ?? "",
         student:
-            json["student"] == null ? null : Student.fromJson(json["student"]),
-        role: json["role"] == null
-            ? []
-            : List<String>.from(json["role"]!.map((x) => x)),
-        permissions: json["permissions"] == null
-            ? []
-            : List<String>.from(json["permissions"]!.map((x) => x)),
+            json['student'] != null && json['student'] is Map<String, dynamic>
+                ? Student.fromJson(json['student'])
+                : null,
+        role: json["role"] is List
+            ? List<String>.from(json["role"])
+            : [json["role"].toString()],
+        permissions: json["permissions"] is List
+            ? List<String>.from(json["permissions"])
+            : [],
       );
 
   Map<String, dynamic> toJson() => {
@@ -55,18 +57,23 @@ class Student {
     this.id,
   });
 
+  // Factory constructor to handle raw JSON input
   factory Student.fromRawJson(String str) => Student.fromJson(json.decode(str));
 
+  // Convert the object to a JSON string
   String toRawJson() => json.encode(toJson());
 
+  // Factory constructor from a Map<String, dynamic> (used by fromJson)
   factory Student.fromJson(Map<String, dynamic> json) => Student(
-        name: json["name"] ?? "",
+        name: json["name"] ?? "", // Default to empty string if missing
         email: json["email"] ?? "",
         password: json["password"] ?? "",
-        photo: json["photo"] ?? "",
-        id: json["id"].toString() ?? "",
+        photo:
+            json["photo"]?.toString() ?? "", // Safe null check with toString()
+        id: json["id"]?.toString() ?? "", // Ensuring id is always a string
       );
 
+  // Convert the object to a Map<String, dynamic> for JSON encoding
   Map<String, dynamic> toJson() => {
         "name": name,
         "email": email,

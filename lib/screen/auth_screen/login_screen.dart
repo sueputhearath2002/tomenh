@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart' show BlocBuilder;
-import 'package:tomnenh/screen/auth_cubit.dart';
+import 'package:tomnenh/main_screen.dart';
+import 'package:tomnenh/screen/auth_screen/auth_cubit.dart';
 import 'package:tomnenh/style/assets.dart';
 import 'package:tomnenh/style/colors.dart';
 import 'package:tomnenh/widget/my_elevate_btn.dart';
@@ -26,7 +27,10 @@ class LoginScreen extends StatelessWidget {
     print("=======dddd===========$result");
     if (result) {
       if (!context.mounted) return;
-      Navigator.pushNamedAndRemoveUntil(context, "/", (route) => false);
+      Navigator.pushAndRemoveUntil(
+          context,
+          MaterialPageRoute(builder: (context) => const MainScreen()),
+          (route) => false);
     }
   }
 

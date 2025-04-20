@@ -10,13 +10,23 @@ import 'package:tomnenh/widget/build_custom_appbar.dart';
 import 'package:tomnenh/widget/card_custome.dart';
 import 'package:tomnenh/widget/text_widget.dart';
 
-class DashboardScreen extends StatelessWidget {
-  DashboardScreen({super.key});
+class DashboardScreen extends StatefulWidget {
+  const DashboardScreen({super.key});
+
+  @override
+  State<DashboardScreen> createState() => _DashboardScreenState();
+}
+
+class _DashboardScreenState extends State<DashboardScreen> {
   final GlobalKey<ScaffoldState> _key = GlobalKey();
+
   final ValueNotifier<DateTime> selectedDayNotifier =
       ValueNotifier(DateTime.now());
+
   final ValueNotifier<DateTime> selectedMonthNotifier =
       ValueNotifier(DateTime.now());
+
+  final ValueNotifier<bool> chartReady = ValueNotifier(false);
 
   String _getMonthName(int month) {
     return [
@@ -36,6 +46,14 @@ class DashboardScreen extends StatelessWidget {
   }
 
   @override
+  void initState() {
+    Future.delayed(const Duration(milliseconds: 100), () {
+      chartReady.value = true;
+    });
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       key: _key,
@@ -47,7 +65,15 @@ class DashboardScreen extends StatelessWidget {
           // buildTableCalendar(),
           buildRowMenu(),
           const SizedBox(height: 8),
-          chartWidget(),
+          ValueListenableBuilder<bool>(
+            valueListenable: chartReady,
+            builder: (_, isReady, __) {
+              if (!isReady) {
+                return const SizedBox(height: 200); // Or loading placeholder
+              }
+              return RepaintBoundary(child: chartWidget());
+            },
+          ),
           attendanceRecently(),
           buildListAttendance()
         ],
@@ -103,7 +129,9 @@ class DashboardScreen extends StatelessWidget {
         physics: const NeverScrollableScrollPhysics(),
         itemCount: 5,
         itemBuilder: (context, index) {
-          return const CardAttendance();
+          return const RepaintBoundary(
+            child: CardAttendance(),
+          );
         });
   }
 

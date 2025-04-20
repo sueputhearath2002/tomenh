@@ -4,21 +4,30 @@ import 'package:tomnenh/create/set_up_customer.dart';
 import 'package:tomnenh/create/set_up_product.dart';
 import 'package:tomnenh/create/set_up_unit.dart';
 import 'package:tomnenh/dashboard/dashboard_screen.dart';
+import 'package:tomnenh/datas/models/user_model.dart';
 import 'package:tomnenh/main_screen.dart';
+import 'package:tomnenh/screen/auth_screen/login_screen.dart';
+import 'package:tomnenh/screen/auth_screen/sign_up_screen.dart';
 import 'package:tomnenh/screen/category_screen.dart';
-import 'package:tomnenh/screen/login_screen.dart';
 import 'package:tomnenh/screen/product_screen.dart';
-import 'package:tomnenh/screen/sign_up_screen.dart';
-import 'package:tomnenh/screen/upload_face_detection_screen.dart';
+import 'package:tomnenh/screen/uploads/upload_face_detection_screen.dart';
+import 'package:tomnenh/screen/uploads/upload_soure_file_label.dart';
 import 'package:tomnenh/upload_image_with_ml_kit/upload_image_screen.dart';
 
 class AppNavigator {
-  static Route<dynamic>? appRoute({required RouteSettings settings}) {
+  static Route<dynamic>? appRoute({
+    required RouteSettings settings,
+    UserModel? user,
+  }) {
     switch (settings.name) {
       case '/':
-        return MaterialPageRoute(builder: (_) => const MainScreen());
+        if (user == null) {
+          return MaterialPageRoute(builder: (_) => LoginScreen());
+        } else {
+          return MaterialPageRoute(builder: (_) => const MainScreen());
+        }
       case '/dashboard':
-        return MaterialPageRoute(builder: (_) => DashboardScreen());
+        return MaterialPageRoute(builder: (_) => const DashboardScreen());
       case '/set_up_product':
         return MaterialPageRoute(builder: (_) => const SetupProduct());
       case '/set_up_unit':
@@ -40,6 +49,8 @@ class AppNavigator {
       case UploadFaceDetectionScreen.routeName:
         return MaterialPageRoute(
             builder: (_) => const UploadFaceDetectionScreen());
+      case UploadSourceFileLabel.routeName:
+        return MaterialPageRoute(builder: (_) => const UploadSourceFileLabel());
       // case '/details':
       //   final args = settings.arguments as DetailsArguments;
       //   return MaterialPageRoute(builder: (_) => DetailsScreen(args: args));

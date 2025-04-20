@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart' show BlocBuilder;
-import 'package:tomnenh/screen/auth_cubit.dart';
+import 'package:tomnenh/screen/auth_screen/auth_cubit.dart';
 import 'package:tomnenh/style/assets.dart';
 import 'package:tomnenh/style/colors.dart';
 import 'package:tomnenh/widget/build_btn_text_icon.dart';
@@ -28,6 +28,7 @@ class SignUpScreen extends StatelessWidget {
       "password_confirmation": confirmPassWordController.text,
     };
     final result = await screenCubit.register(data);
+    print("===================hello${result}");
     if (result) {
       if (!context.mounted) return;
       Navigator.pushNamedAndRemoveUntil(context, "/login", (route) => false);
@@ -86,33 +87,37 @@ class SignUpScreen extends StatelessWidget {
                       color: textSearchColor,
                     ),
                     const SizedBox(height: 16),
-                    const TextFormFieldCustom(
+                    TextFormFieldCustom(
                       hinText: "Your name",
-                      prefixIcon: Icon(
+                      textEditingController: userNameController,
+                      prefixIcon: const Icon(
                         Icons.person,
                         color: textSearchColor,
                       ),
                     ),
                     const SizedBox(height: 8),
-                    const TextFormFieldCustom(
+                    TextFormFieldCustom(
                       hinText: "Exampl@gmail.com",
-                      prefixIcon: Icon(
+                      textEditingController: emailController,
+                      prefixIcon: const Icon(
                         Icons.email,
                         color: textSearchColor,
                       ),
                     ),
                     const SizedBox(height: 8),
-                    const TextFormFieldCustom(
+                    TextFormFieldCustom(
                       hinText: "Password",
-                      prefixIcon: Icon(
+                      textEditingController: passWordController,
+                      prefixIcon: const Icon(
                         Icons.lock,
                         color: textSearchColor,
                       ),
                     ),
                     const SizedBox(height: 8),
-                    const TextFormFieldCustom(
+                    TextFormFieldCustom(
                       hinText: "Confirm Password",
-                      prefixIcon: Icon(
+                      textEditingController: confirmPassWordController,
+                      prefixIcon: const Icon(
                         Icons.lock,
                         color: textSearchColor,
                       ),

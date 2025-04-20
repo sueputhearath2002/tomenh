@@ -12,6 +12,8 @@ class ImpRemoteDataSource implements RemoteDataSource {
   ImpRemoteDataSource({required this.client});
   // final String domain = "http://127.0.0.1:8000/api/";
   final String domain = "http://10.0.2.2:8000/api"; //Run on emulator
+  // final String domain =
+  //     "http://192.168.2.138:8000/api"; //Run on Physic device  //192.168.2.138 this get from your IP Local by cmd for macbook "ipconfig getifaddr en0"
 
   Future<String> getParams(Map? params) async {
     try {
@@ -63,7 +65,7 @@ class ImpRemoteDataSource implements RemoteDataSource {
       headers: {"Content-Type": "application/json"},
       body: await getParams(params),
     );
-    print("=================${result.statusCode}");
+    print("========ddd=========${await getParams(params)}");
 
     final body = json.decode(result.body);
     print("=================${body["success"]}");
