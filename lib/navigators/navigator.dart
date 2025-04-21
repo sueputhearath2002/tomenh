@@ -12,7 +12,6 @@ import 'package:tomnenh/screen/category_screen.dart';
 import 'package:tomnenh/screen/product_screen.dart';
 import 'package:tomnenh/screen/uploads/upload_face_detection_screen.dart';
 import 'package:tomnenh/screen/uploads/upload_soure_file_label.dart';
-import 'package:tomnenh/upload_image_with_ml_kit/upload_image_screen.dart';
 
 class AppNavigator {
   static Route<dynamic>? appRoute({
@@ -34,8 +33,8 @@ class AppNavigator {
         return MaterialPageRoute(builder: (_) => const SetUpUnit());
       case '/set_up_customer':
         return MaterialPageRoute(builder: (_) => const SetUpCustomer());
-      case '/upload_image':
-        return MaterialPageRoute(builder: (_) => const UploadImageScreen());
+      // case '/upload_image':
+      //   return MaterialPageRoute(builder: (_) => const UploadImageScreen());
       case '/login':
         return MaterialPageRoute(builder: (_) => LoginScreen());
       case '/register':

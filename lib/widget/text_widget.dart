@@ -7,12 +7,14 @@ class TextWidget extends StatelessWidget {
     super.key,
     this.text = "",
     this.fontSize = 14,
+    this.maxLines = 2,
     this.fontWeight = FontWeight.normal,
     this.color = textSearchColor,
     this.decoration = TextDecoration.none,
   });
   final String text;
   final double fontSize;
+  final int maxLines;
   final FontWeight fontWeight;
   final Color color;
   final TextDecoration? decoration;
@@ -21,6 +23,8 @@ class TextWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return Text(
       text,
+      maxLines: maxLines,
+      softWrap: true,
       style: TextStyle(
         fontSize: fontSize,
         fontWeight: fontWeight,

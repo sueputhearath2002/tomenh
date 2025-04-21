@@ -1,6 +1,7 @@
-import 'dart:io';
-
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:tomnenh/screen/uploads/upload_cubit.dart';
 import 'package:tomnenh/style/assets.dart';
 import 'package:tomnenh/style/colors.dart';
 import 'package:tomnenh/widget/app_bar_custom_simple.dart'
@@ -9,10 +10,11 @@ import 'package:tomnenh/widget/elevated_btn_cus.dart';
 import 'package:tomnenh/widget/hr.dart';
 import 'package:tomnenh/widget/rectangle_btn.dart';
 import 'package:tomnenh/widget/text_widget.dart';
-import 'package:tomnenh/widget/upload_image.dart';
+import 'package:tomnenh/widget/upload_file.dart';
 
 class UploadSourceFileLabel extends StatefulWidget {
   const UploadSourceFileLabel({super.key});
+
   static const String routeName = "source_lable";
 
   @override
@@ -20,7 +22,42 @@ class UploadSourceFileLabel extends StatefulWidget {
 }
 
 class _UploadSourceFileLabelState extends State<UploadSourceFileLabel> {
-  File? _image;
+  FilePickerResult? tLifeFile;
+  FilePickerResult? labelFile;
+  final screenCubit = UploadCubit();
+
+  void uploadFile() async {
+    Map<String, dynamic> data = {
+      "file": tLifeFile,
+      "label": labelFile,
+    };
+    final result = await screenCubit.uploadFile(data);
+    if (result) {
+      if (!mounted) return;
+      Navigator.pop(context);
+    }
+    print("==============result =======${result}");
+  }
+
+  Future<void> pickFile(String fileType) async {
+    final result = await FilePicker.platform.pickFiles(allowMultiple: false);
+
+    if (result != null) {
+      setState(() {
+        if (fileType == 'tlife') {
+          tLifeFile = result;
+        } else if (fileType == 'label') {
+          labelFile = result;
+        }
+      });
+
+      for (var element in result.files) {
+        print("Picked $fileType file: ${element.name}");
+      }
+    } else {
+      print("No $fileType file selected");
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -29,15 +66,20 @@ class _UploadSourceFileLabelState extends State<UploadSourceFileLabel> {
         title: "Upload Source File && Label",
       ),
       persistentFooterButtons: [
-        RectangleBtnZin(
-          onTap: () {},
-          isFullWidth: true,
-          child: const TextWidget(
-            text: "Upload Now",
-            color: whiteColor,
-            fontSize: 16,
-            fontWeight: FontWeight.bold,
-          ),
+        BlocBuilder<UploadCubit, UploadState>(
+          bloc: screenCubit,
+          builder: (context, state) {
+            return RectangleBtnZin(
+              onTap: () => uploadFile(),
+              isFullWidth: true,
+              child: const TextWidget(
+                text: "Upload Now",
+                color: whiteColor,
+                fontSize: 16,
+                fontWeight: FontWeight.bold,
+              ),
+            );
+          },
         )
       ],
       body: Padding(
@@ -50,17 +92,14 @@ class _UploadSourceFileLabelState extends State<UploadSourceFileLabel> {
               alignment: Alignment.topLeft,
               child: TextWidget(
                 text: "Note: Upload Your source file below with .tlife",
-                color: mainColor,
+                color: textColor,
               ),
             ),
-            UploadImage(
-              imgFile: _image,
-              onTap: () {},
-            ),
-            const ElevatedBtnCus(
-              // onTap: () => _pickImage(ImageSource.camera),
+            UploadFile(file: tLifeFile),
+            ElevatedBtnCus(
+              onTap: () => pickFile('tlife'),
               icon: Icons.cloud_upload,
-              btnName: "Select File ",
+              btnName: "Select .tlife file ",
             ),
             const Padding(
               padding: EdgeInsets.symmetric(vertical: 16),
@@ -72,14 +111,15 @@ class _UploadSourceFileLabelState extends State<UploadSourceFileLabel> {
             const Align(
               alignment: Alignment.topLeft,
               child: TextWidget(
-                text: "Note: Upload Your source file below with .labels",
-                color: mainColor,
+                text: "Note: Upload Your source file below with .txt",
+                color: textColor,
               ),
             ),
-            const ElevatedBtnCus(
-              // onTap: () => _pickImage(ImageSource.camera),
+            UploadFile(file: labelFile),
+            ElevatedBtnCus(
+              onTap: () => pickFile('label'),
               icon: Icons.cloud_upload,
-              btnName: "Select File ",
+              btnName: "Select .txt file ",
             ),
           ],
         ),

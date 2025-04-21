@@ -3,6 +3,8 @@ import 'dart:io';
 
 import 'package:http/http.dart' as http;
 import 'package:tomnenh/datas/datasource/remote_response.dart';
+import 'package:tomnenh/datas/models/user_model.dart';
+import 'package:tomnenh/helper/database_helper.dart';
 
 import 'remote_data.dart';
 
@@ -17,10 +19,10 @@ class ImpRemoteDataSource implements RemoteDataSource {
 
   Future<String> getParams(Map? params) async {
     try {
-      // final auth = await Auth.instance.user;
+      final UserModel? auth = await DatabaseHelper.instance.getUser();
 
       final Map param = {
-        // "token": auth?.token,
+        "token": auth?.token,
         "source": Platform.isIOS ? "ios" : "android",
       };
 
@@ -72,6 +74,50 @@ class ImpRemoteDataSource implements RemoteDataSource {
     return ApiResponse(
       success: body["success"] ?? false,
       data: body['data'],
+      msg: body["message"] ?? "Error",
+    );
+  }
+
+  @override
+  Future<ApiResponse> uploadFile({Map? params}) async {
+    var url = Uri.parse("$domain/student/upload-model");
+
+    // Extract file paths
+    final filePath = params?["file"]?.files?.single?.path;
+    final labelPath = params?["label"]?.files?.single?.path;
+
+    if (filePath == null || labelPath == null) {
+      return ApiResponse(
+        success: false,
+        msg: "Missing file or label file.",
+        data: {},
+      );
+    }
+
+    File fileTLife = File(filePath);
+    File fileLabel = File(labelPath);
+
+    var request = http.MultipartRequest('POST', url);
+    final UserModel? auth = await DatabaseHelper.instance.getUser();
+
+    request.headers['Authorization'] = 'Bearer ${auth?.token}';
+    request.headers['Accept'] = 'application/json';
+
+    request.files
+        .add(await http.MultipartFile.fromPath('file', fileTLife.path));
+    request.files
+        .add(await http.MultipartFile.fromPath('label', fileLabel.path));
+
+    print("Uploading files with token: ${fileTLife.path}, ${fileLabel.path}");
+
+    var streamedResponse = await request.send();
+    var result = await http.Response.fromStream(streamedResponse);
+
+    final body = json.decode(result.body);
+
+    return ApiResponse(
+      success: body["success"] ?? false,
+      data: body["data"] ?? {},
       msg: body["message"] ?? "Error",
     );
   }

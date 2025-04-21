@@ -18,8 +18,4 @@ class GlobalCubit extends Cubit<GlobalState> {
       // You can emit an error state or log this to analytics
     }
   }
-
-// UserModel? getUser() {
-  //   return state.user;
-  // }
 }

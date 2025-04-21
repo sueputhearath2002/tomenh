@@ -8,11 +8,13 @@ import 'package:image/image.dart' as img;
 import 'package:image_picker/image_picker.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:tflite_flutter/tflite_flutter.dart' as tfl;
+import 'package:tomnenh/helper/helper.dart';
 import 'package:tomnenh/style/assets.dart';
 import 'package:tomnenh/style/colors.dart';
 import 'package:tomnenh/widget/app_bar_custom_simple.dart'
     show AppbarCustomSimple;
 import 'package:tomnenh/widget/elevated_btn_cus.dart';
+import 'package:tomnenh/widget/rectangle_btn.dart';
 import 'package:tomnenh/widget/text_widget.dart';
 import 'package:tomnenh/widget/upload_image.dart';
 
@@ -34,22 +36,28 @@ class _UploadFaceDetectionScreenState extends State<UploadFaceDetectionScreen> {
   List<String> _labels = [];
   final ImagePicker _picker = ImagePicker();
   final faceDetector = GoogleMlKit.vision.faceDetector();
+
   List<String> listLabels = [];
 
   @override
   void initState() {
     super.initState();
+
     _loadModel();
     _loadLabels();
   }
 
   Future<void> _loadModel() async {
     try {
-      // _interpreter =
-      //     await tfl.Interpreter.fromAsset('assets/fruit_classifier.tflite');
+      File? tLifeFile = await Helper.getLocalModelFile('face_detection.tflite');
 
-      _interpreter =
-          await tfl.Interpreter.fromAsset('assets/fruit_classifier.tflite');
+      if (tLifeFile != null) {
+        // Load into interpreter
+        _interpreter = tfl.Interpreter.fromFile(tLifeFile);
+        print("Model loaded!");
+      } else {
+        print("Model not found. Please download it first.");
+      }
     } catch (e) {
       debugPrint("Error loading model: $e");
     }
@@ -57,17 +65,26 @@ class _UploadFaceDetectionScreenState extends State<UploadFaceDetectionScreen> {
 
   Future<void> _loadLabels() async {
     try {
-      String labelData = await rootBundle.loadString('assets/labels.txt');
-      setState(() {
-        _labels =
-            labelData.split("\n").where((label) => label.isNotEmpty).toList();
-      });
+      // Get the local model file path
+      File? labelFile = await Helper.getLocalModelFile('labels.txt');
+
+      if (labelFile != null && await labelFile.exists()) {
+        String labelData = await labelFile.readAsString();
+
+        setState(() {
+          _labels =
+              labelData.split("\n").where((label) => label.isNotEmpty).toList();
+        });
+      } else {
+        debugPrint("Label file not found.");
+      }
     } catch (e) {
       debugPrint("Error loading labels: $e");
     }
   }
 
   Future<void> _pickImage(ImageSource source) async {
+    Navigator.pop(context);
     final pickedFile = await _picker.pickImage(source: source);
     if (pickedFile != null) {
       File imageFile = File(pickedFile.path);
@@ -167,111 +184,115 @@ class _UploadFaceDetectionScreenState extends State<UploadFaceDetectionScreen> {
       appBar: const AppbarCustomSimple(
         title: "Upload Face Detection",
       ),
-      body: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 16),
-        child: Column(
-          spacing: 8,
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: [
-            const Align(
-              alignment: Alignment.topLeft,
-              child: TextWidget(
-                text: "Note: Upload image by Tap below.",
-                color: mainColor,
-              ),
-            ),
-            Stack(
-              children: [
-                UploadImage(
-                  imgFile: _image,
-                  onTap: () {
-                    showModalBottomSheet<void>(
-                      context: context,
-                      builder: (BuildContext context) {
-                        return buildOptionSelectPicture();
-                      },
-                    );
-                  },
+      persistentFooterButtons: [
+        ElevatedBtnCus(
+          onTap: () {},
+          isFullWidth: true,
+          btnName: "Submit Attendance",
+        ),
+      ],
+      body: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16),
+          child: Column(
+            spacing: 8,
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              const Align(
+                alignment: Alignment.topLeft,
+                child: TextWidget(
+                  text: "Note: Upload image by Tap below.",
+                  color: mainColor,
                 ),
-                if (_displayImage != null)
-                  Positioned.fill(
-                    child: CustomPaint(
-                      painter: FacePainter(
-                        faces: _detectedFaces,
-                        image: _displayImage!,
+              ),
+              Stack(
+                children: [
+                  UploadImage(
+                    imgFile: _image,
+                    onTap: () {
+                      showModalBottomSheet<void>(
+                        context: context,
+                        builder: (BuildContext context) {
+                          return buildOptionSelectPicture();
+                        },
+                      );
+                    },
+                  ),
+                  if (_displayImage != null)
+                    Positioned.fill(
+                      child: CustomPaint(
+                        painter: FacePainter(
+                          faces: _detectedFaces,
+                          image: _displayImage!,
+                        ),
                       ),
                     ),
-                  ),
-              ],
-            ),
-            // _displayImage == null
-            //     ?
-            // const Text("No Image Selected",
-            //         style: TextStyle(fontSize: 18))
-            //     : SizedBox(
-            //         height: 300,
-            //         child: Stack(
-            //           children: [
-            //             Image.file(_image!, height: 300),
-            //             Positioned.fill(
-            //               child: CustomPaint(
-            //                 painter: FacePainter(
-            //                   faces: _detectedFaces,
-            //                   image: _displayImage!,
-            //                 ),
-            //               ),
-            //             ),
-            //           ],
-            //         ),
-            //       ),
-            // const SizedBox(height: 20),
-            // ElevatedButton.icon(
-            //   icon: const Icon(Icons.camera_alt),
-            //   label: const Text("Pick Image from Camera"),
-            //   onPressed: () => _pickImage(ImageSource.camera),
-            // ),
-            // ElevatedButton.icon(
-            //   icon: const Icon(Icons.image),
-            //   label: const Text("Pick Image from Gallery"),
-            //   onPressed: () => _pickImage(ImageSource.gallery),
-            // ),
-            // const SizedBox(height: 20),
-            listLabels.isEmpty
-                ? Padding(
-                    padding: const EdgeInsets.only(top: 16),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        Image.asset(
-                          noDataPng,
-                          height: 300,
-                        ),
-                        const Text("Data not found yet!",
-                            style: TextStyle(fontSize: 16)),
-                      ],
+                ],
+              ),
+              RectangleBtnZin(
+                onTap: () {},
+                bgColor: greyColor,
+                isFullWidth: true,
+                child: const Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  spacing: 16,
+                  children: [
+                    Icon(
+                      Icons.image,
+                      color: mainColor,
                     ),
-                  )
-                : Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: List.generate(
-                      listLabels.length,
-                      (int index) {
-                        return Row(
-                          children: [
-                            const Icon(Icons.check_circle,
-                                color: Colors.green, size: 18),
-                            const SizedBox(width: 8),
-                            Text(
-                              listLabels[index].toString(),
-                              style: const TextStyle(fontSize: 16),
-                              textAlign: TextAlign.start,
-                            ),
-                          ],
-                        );
-                      },
+                    TextWidget(
+                      color: mainColor,
+                      text: "Upload Image",
                     ),
-                  ),
-          ],
+                  ],
+                ),
+              ),
+              const Align(
+                alignment: Alignment.topLeft,
+                child: TextWidget(
+                  text: "List of Student",
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              listLabels.isEmpty
+                  ? Padding(
+                      padding: const EdgeInsets.only(top: 16),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Image.asset(
+                            noDataPng,
+                            height: 300,
+                          ),
+                          const Text("Data not found yet!",
+                              style: TextStyle(fontSize: 16)),
+                        ],
+                      ),
+                    )
+                  : Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: List.generate(
+                        listLabels.length,
+                        (int index) {
+                          return Row(
+                            children: [
+                              const Icon(Icons.check_circle,
+                                  color: Colors.green, size: 18),
+                              const SizedBox(width: 8),
+                              Text(
+                                listLabels[index].toString(),
+                                style: const TextStyle(fontSize: 16),
+                                textAlign: TextAlign.start,
+                              ),
+                            ],
+                          );
+                        },
+                      ),
+                    ),
+            ],
+          ),
         ),
       ),
     );
