@@ -7,11 +7,13 @@ import 'package:tomnenh/dashboard/dashboard_screen.dart';
 import 'package:tomnenh/datas/models/user_model.dart';
 import 'package:tomnenh/main_screen.dart';
 import 'package:tomnenh/screen/auth_screen/login_screen.dart';
+import 'package:tomnenh/screen/auth_screen/profile_screen.dart';
 import 'package:tomnenh/screen/auth_screen/sign_up_screen.dart';
 import 'package:tomnenh/screen/category_screen.dart';
 import 'package:tomnenh/screen/product_screen.dart';
 import 'package:tomnenh/screen/uploads/upload_face_detection_screen.dart';
 import 'package:tomnenh/screen/uploads/upload_soure_file_label.dart';
+import 'package:tomnenh/screen/uploads/upload_student_face_image_screen.dart';
 
 class AppNavigator {
   static Route<dynamic>? appRoute({
@@ -50,6 +52,11 @@ class AppNavigator {
             builder: (_) => const UploadFaceDetectionScreen());
       case UploadSourceFileLabel.routeName:
         return MaterialPageRoute(builder: (_) => const UploadSourceFileLabel());
+      case ProfileScreen.routeName:
+        return MaterialPageRoute(builder: (_) => const ProfileScreen());
+      case UploadStudentFaceImageScreen.routeName:
+        return MaterialPageRoute(
+            builder: (_) => const UploadStudentFaceImageScreen());
       // case '/details':
       //   final args = settings.arguments as DetailsArguments;
       //   return MaterialPageRoute(builder: (_) => DetailsScreen(args: args));

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:tomnenh/screen/auth_screen/profile_screen.dart';
 import 'package:tomnenh/screen/global_cubit.dart';
 import 'package:tomnenh/style/assets.dart';
 import 'package:tomnenh/style/colors.dart';
@@ -59,7 +60,8 @@ class _BuildCustomAppbarState extends State<BuildCustomAppbar> {
           ),
           actions: [
             InkWell(
-              onTap: () => Navigator.pushNamed(context, '/login'),
+              onTap: () =>
+                  Navigator.pushNamed(context, ProfileScreen.routeName),
               child: const ImageNetWorkWidget(
                 width: 30,
                 height: 30,

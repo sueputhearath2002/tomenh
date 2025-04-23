@@ -78,9 +78,9 @@ class DatabaseHelper {
 
 //====================Under maintenance=================
 
-  Future<int> deleteUser(int id) async {
+  Future<int> deleteUser(String token) async {
     final db = await database;
-    return await db.delete('users', where: 'id = ?', whereArgs: [id]);
+    return await db.delete('users', where: 'token = ?', whereArgs: [token]);
   }
 
   Future<void> closeDB() async {

@@ -79,6 +79,27 @@ class ImpRemoteDataSource implements RemoteDataSource {
   }
 
   @override
+  Future<ApiResponse> logOutUser() async {
+    final UserModel? auth = await DatabaseHelper.instance.getUser();
+    var url = Uri.parse("$domain/logout");
+    final result = await client.post(
+      url,
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": "Bearer ${auth?.token}", // Add Bearer token here
+      },
+      body: await getParams({}),
+    );
+
+    final body = json.decode(result.body);
+    return ApiResponse(
+      success: body["success"] ?? false,
+      data: body["data"] as List<dynamic>,
+      msg: body["message"] ?? "Error",
+    );
+  }
+
+  @override
   Future<ApiResponse> uploadFile({Map? params}) async {
     var url = Uri.parse("$domain/student/upload-model");
 

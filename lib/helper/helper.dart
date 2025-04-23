@@ -1,5 +1,7 @@
 import 'dart:io';
 
+import 'package:flutter/material.dart';
+import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/http.dart' as http;
 import 'package:path_provider/path_provider.dart';
@@ -47,6 +49,20 @@ class Helper {
     } else {
       return null; // File not downloaded yet
     }
+  }
+
+  static buildSpeedDial({required List<SpeedDialChild> speedDialChild}) {
+    return SpeedDial(
+      elevation: 0,
+      animatedIcon: AnimatedIcons.add_event,
+      animatedIconTheme: const IconThemeData(size: 28.0),
+      backgroundColor: mainColor,
+      foregroundColor: Colors.white,
+      visible: true,
+      activeIcon: Icons.close,
+      curve: Curves.bounceInOut,
+      children: speedDialChild,
+    );
   }
 }
 

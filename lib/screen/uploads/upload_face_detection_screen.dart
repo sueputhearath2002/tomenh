@@ -14,7 +14,6 @@ import 'package:tomnenh/style/colors.dart';
 import 'package:tomnenh/widget/app_bar_custom_simple.dart'
     show AppbarCustomSimple;
 import 'package:tomnenh/widget/elevated_btn_cus.dart';
-import 'package:tomnenh/widget/rectangle_btn.dart';
 import 'package:tomnenh/widget/text_widget.dart';
 import 'package:tomnenh/widget/upload_image.dart';
 
@@ -209,14 +208,6 @@ class _UploadFaceDetectionScreenState extends State<UploadFaceDetectionScreen> {
                 children: [
                   UploadImage(
                     imgFile: _image,
-                    onTap: () {
-                      showModalBottomSheet<void>(
-                        context: context,
-                        builder: (BuildContext context) {
-                          return buildOptionSelectPicture();
-                        },
-                      );
-                    },
                   ),
                   if (_displayImage != null)
                     Positioned.fill(
@@ -229,24 +220,17 @@ class _UploadFaceDetectionScreenState extends State<UploadFaceDetectionScreen> {
                     ),
                 ],
               ),
-              RectangleBtnZin(
-                onTap: () {},
-                bgColor: greyColor,
-                isFullWidth: true,
-                child: const Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  spacing: 16,
-                  children: [
-                    Icon(
-                      Icons.image,
-                      color: mainColor,
-                    ),
-                    TextWidget(
-                      color: mainColor,
-                      text: "Upload Image",
-                    ),
-                  ],
-                ),
+              ElevatedBtnCus(
+                onTap: () {
+                  showModalBottomSheet<void>(
+                    context: context,
+                    builder: (BuildContext context) {
+                      return buildOptionSelectPicture();
+                    },
+                  );
+                },
+                icon: Icons.image,
+                btnName: "Upload Image",
               ),
               const Align(
                 alignment: Alignment.topLeft,
@@ -305,38 +289,40 @@ class _UploadFaceDetectionScreenState extends State<UploadFaceDetectionScreen> {
         vertical: 0,
       ),
       width: double.infinity,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        mainAxisAlignment: MainAxisAlignment.center,
-        mainAxisSize: MainAxisSize.min,
-        spacing: 8,
-        children: [
-          const ListTile(
-            title: TextWidget(
-              text: "Let's pick image from option below.",
-              fontSize: 14,
-              fontWeight: FontWeight.bold,
+      child: SafeArea(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.center,
+          mainAxisSize: MainAxisSize.min,
+          spacing: 8,
+          children: [
+            const ListTile(
+              title: TextWidget(
+                text: "Let's pick image from option below.",
+                fontSize: 14,
+                fontWeight: FontWeight.bold,
+              ),
+              leading: Icon(
+                Icons.info,
+                color: mainColor,
+              ),
             ),
-            leading: Icon(
-              Icons.info,
-              color: mainColor,
+            // Image.asset(
+            //   getImagePng,
+            //   height: 200,
+            // ),
+            ElevatedBtnCus(
+              onTap: () => _pickImage(ImageSource.camera),
+              icon: Icons.camera_alt,
+              btnName: "Pick form Camera",
             ),
-          ),
-          Image.asset(
-            getImagePng,
-            height: 200,
-          ),
-          ElevatedBtnCus(
-            onTap: () => _pickImage(ImageSource.camera),
-            icon: Icons.camera_alt,
-            btnName: "Pick form Camera",
-          ),
-          ElevatedBtnCus(
-            onTap: () => _pickImage(ImageSource.gallery),
-            icon: Icons.photo,
-            btnName: "Pick form Image",
-          ),
-        ],
+            ElevatedBtnCus(
+              onTap: () => _pickImage(ImageSource.gallery),
+              icon: Icons.photo,
+              btnName: "Pick form Image",
+            ),
+          ],
+        ),
       ),
     );
   }

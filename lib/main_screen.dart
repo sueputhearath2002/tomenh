@@ -4,10 +4,12 @@ import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:tomnenh/dashboard/dashboard_screen.dart';
 import 'package:tomnenh/datas/models/user_model.dart';
 import 'package:tomnenh/helper/database_helper.dart';
+import 'package:tomnenh/helper/helper.dart';
 import 'package:tomnenh/screen/global_cubit.dart';
 import 'package:tomnenh/screen/list_attendance_screen.dart';
 import 'package:tomnenh/screen/uploads/upload_face_detection_screen.dart';
 import 'package:tomnenh/screen/uploads/upload_soure_file_label.dart';
+import 'package:tomnenh/screen/uploads/upload_student_face_image_screen.dart';
 import 'package:tomnenh/style/colors.dart';
 
 class MainScreen extends StatefulWidget {
@@ -42,17 +44,9 @@ class _MainScreenState extends State<MainScreen> {
     super.initState();
   }
 
-  SpeedDial buildSpeedDial() {
-    return SpeedDial(
-      elevation: 0,
-      animatedIcon: AnimatedIcons.add_event,
-      animatedIconTheme: const IconThemeData(size: 28.0),
-      backgroundColor: mainColor,
-      foregroundColor: Colors.white,
-      visible: true,
-      activeIcon: Icons.close,
-      curve: Curves.bounceInOut,
-      children: [
+  SpeedDial buildOptionForAdmin() {
+    return Helper.buildSpeedDial(
+      speedDialChild: [
         SpeedDialChild(
           elevation: 0,
           shape: const CircleBorder(),
@@ -81,59 +75,91 @@ class _MainScreenState extends State<MainScreen> {
     );
   }
 
+  SpeedDial buildOptionForStudent() {
+    return Helper.buildSpeedDial(
+      speedDialChild: [
+        SpeedDialChild(
+          elevation: 0,
+          shape: const CircleBorder(),
+          child: const Icon(Icons.photo_camera_front_rounded, color: mainColor),
+          backgroundColor: secondaryColor,
+          onTap: () => Navigator.pushNamed(
+              context, UploadStudentFaceImageScreen.routeName),
+          label: 'Upload Image',
+          labelStyle:
+              const TextStyle(fontWeight: FontWeight.w500, color: Colors.white),
+          labelBackgroundColor: mainColor,
+        ),
+        SpeedDialChild(
+          elevation: 0,
+          shape: const CircleBorder(),
+          child: const Icon(Icons.edit_calendar, color: mainColor),
+          backgroundColor: secondaryColor,
+          onTap: () =>
+              Navigator.pushNamed(context, UploadFaceDetectionScreen.routeName),
+          label: 'Leave Request',
+          labelStyle:
+              const TextStyle(fontWeight: FontWeight.w500, color: Colors.white),
+          labelBackgroundColor: mainColor,
+        ),
+      ],
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        body: pageViewCustom(),
-        floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-        floatingActionButton: BlocBuilder<GlobalCubit, GlobalState>(
-          builder: (context, state) {
-            final role = context.read<GlobalCubit>().state.user?.role;
-            return Padding(
-              padding: const EdgeInsets.only(top: 30),
-              child: SizedBox(
-                width: 50,
-                height: 50,
-                child: role?.first == "student"
-                    ? addButtonWidget(role, context)
-                    : buildSpeedDial(),
-              ),
-            );
-          },
-        ),
-        bottomNavigationBar: NavigationBar(
-            selectedIndex: selectIndex,
-            elevation: 2,
-            indicatorColor: secondaryColor,
-            surfaceTintColor: whiteColor,
-            backgroundColor: whiteColor,
-            height: 65,
-            onDestinationSelected: (int index) {
-              setState(() {
-                selectIndex = index;
-              });
-              pageController.jumpToPage(selectIndex);
-            },
-            destinations: [
-              NavigationDestination(
-                icon: Icon(
-                  Icons.dashboard,
-                  color: selectIndex == 0 ? mainColor : textSearchColor,
-                ),
-                label: 'Dashboard',
-              ),
-              NavigationDestination(
-                icon: Icon(
-                  Icons.event_note,
-                  color: selectIndex == 1 ? mainColor : textSearchColor,
-                ),
-                label: 'Report',
-              ),
-            ]));
+      body: pageViewCustom(),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+      floatingActionButton: BlocBuilder<GlobalCubit, GlobalState>(
+        builder: (context, state) {
+          final role = context.read<GlobalCubit>().state.user?.role;
+          return Padding(
+            padding: const EdgeInsets.only(top: 30),
+            child: SizedBox(
+              width: 50,
+              height: 50,
+              child: role?.first == "student"
+                  ? buildOptionForStudent()
+                  : buildOptionForAdmin(),
+            ),
+          );
+        },
+      ),
+      bottomNavigationBar: NavigationBar(
+        selectedIndex: selectIndex,
+        elevation: 2,
+        indicatorColor: secondaryColor,
+        surfaceTintColor: whiteColor,
+        backgroundColor: whiteColor,
+        height: 65,
+        onDestinationSelected: (int index) {
+          setState(() {
+            selectIndex = index;
+          });
+          pageController.jumpToPage(selectIndex);
+        },
+        destinations: [
+          NavigationDestination(
+            icon: Icon(
+              Icons.dashboard,
+              color: selectIndex == 0 ? mainColor : textSearchColor,
+            ),
+            label: 'Dashboard',
+          ),
+          NavigationDestination(
+            icon: Icon(
+              Icons.event_note,
+              color: selectIndex == 1 ? mainColor : textSearchColor,
+            ),
+            label: 'Report',
+          ),
+        ],
+      ),
+    );
   }
 
-  FloatingActionButton addButtonWidget(
-      List<String>? role, BuildContext context) {
+  FloatingActionButton addButtonWidget(BuildContext context) {
     return FloatingActionButton(
       elevation: 0,
       shape: const CircleBorder(side: BorderSide(color: mainColor)),
@@ -143,6 +169,7 @@ class _MainScreenState extends State<MainScreen> {
         color: whiteColor,
       ),
       onPressed: () {
+        Navigator.pushNamed(context, UploadStudentFaceImageScreen.routeName);
         // role?.first != "student"
         //     ? Navigator.pushNamed(context, UploadFaceDetectionScreen.routeName)
         //     : null;

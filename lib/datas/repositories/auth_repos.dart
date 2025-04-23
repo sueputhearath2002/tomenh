@@ -47,7 +47,6 @@ class AuthRepos {
     } on SocketException {
       return Left(NetworkFailure(errorInternetMessage));
     } catch (e) {
-      print("==============record${e}");
       return Left(NetworkFailure(errorInternetMessage));
     }
   }
@@ -59,9 +58,30 @@ class AuthRepos {
         return Left(ServerFailure(result.msg));
       }
       var record = result.data as Map;
-      print("==============record${record}");
-      // await _updateAuth(record);
-      // Auth.setAuth();
+      return Right(RepoResponse(
+        msg: result.msg,
+        records: record,
+      ));
+    } on ServerException {
+      return Left(ServerFailure(errorMessage));
+    } on SocketException {
+      return Left(NetworkFailure(errorInternetMessage));
+    }
+  }
+
+  Future<UserModel?> getUserInfo() async {
+    final user = databaseHelper.getUser();
+    return user;
+  }
+
+  Future<Either<Failure, RepoResponse<List<dynamic>>>> logOutUser() async {
+    try {
+      final result = await source.logOutUser();
+      if (result.success != true) {
+        return Left(ServerFailure(result.msg));
+      }
+      var record = result.data as List<dynamic>;
+      await databaseHelper.deleteUser(databaseHelper.currentUser?.token ?? "");
 
       return Right(RepoResponse(
         msg: result.msg,

@@ -6,9 +6,11 @@ import 'package:tomnenh/widget/dash_border_container.dart';
 import 'package:tomnenh/widget/text_widget.dart';
 
 class UploadImage extends StatelessWidget {
-  const UploadImage({super.key, this.onTap, this.imgFile});
+  const UploadImage(
+      {super.key, this.onTap, this.imgFile, this.description = ""});
   final VoidCallback? onTap;
   final File? imgFile;
+  final String description;
 
   @override
   Widget build(BuildContext context) {
@@ -31,11 +33,18 @@ class UploadImage extends StatelessWidget {
                           size: 60,
                         ),
                         const TextWidget(
-                          text: "Tap to upload image",
+                          text: "Tap to upload ",
                           fontSize: 16,
                           fontWeight: FontWeight.bold,
                           color: mainColor,
-                        )
+                        ),
+                        if (description.isNotEmpty)
+                          TextWidget(
+                            text: description ?? "",
+                            fontSize: 14,
+                            fontWeight: FontWeight.bold,
+                            color: mainColor,
+                          )
                       ],
                     )),
               )
