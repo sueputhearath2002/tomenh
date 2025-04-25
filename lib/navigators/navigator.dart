@@ -11,6 +11,7 @@ import 'package:tomnenh/screen/auth_screen/profile_screen.dart';
 import 'package:tomnenh/screen/auth_screen/sign_up_screen.dart';
 import 'package:tomnenh/screen/category_screen.dart';
 import 'package:tomnenh/screen/product_screen.dart';
+import 'package:tomnenh/screen/uploads/face_scan_page.dart';
 import 'package:tomnenh/screen/uploads/upload_face_detection_screen.dart';
 import 'package:tomnenh/screen/uploads/upload_soure_file_label.dart';
 import 'package:tomnenh/screen/uploads/upload_student_face_image_screen.dart';
@@ -57,6 +58,8 @@ class AppNavigator {
       case UploadStudentFaceImageScreen.routeName:
         return MaterialPageRoute(
             builder: (_) => const UploadStudentFaceImageScreen());
+      case FaceScannerPage.routeName:
+        return MaterialPageRoute(builder: (_) => const FaceScannerPage());
       // case '/details':
       //   final args = settings.arguments as DetailsArguments;
       //   return MaterialPageRoute(builder: (_) => DetailsScreen(args: args));

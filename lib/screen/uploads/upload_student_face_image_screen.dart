@@ -1,7 +1,9 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:google_mlkit_face_detection/google_mlkit_face_detection.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:tomnenh/screen/uploads/face_scan_page.dart';
 import 'package:tomnenh/screen/uploads/upload_face_screen.dart';
 import 'package:tomnenh/widget/app_bar_custom_simple.dart';
 import 'package:tomnenh/widget/elevated_btn_cus.dart';
@@ -34,27 +36,39 @@ class _UploadStudentFaceImageScreenState
     }
   }
 
-  List<Map<String, dynamic>> studentImageFaces = [
-    {
-      "name": "Student 1",
-      "image": "assets/images/student1.jpg",
-    },
-    {
-      "name": "Student 2",
-      "image": "assets/images/student2.jpg",
-    },
-    {
-      "name": "Student 1",
-      "image": "assets/images/student1.jpg",
-    },
-    {
-      "name": "Student 2",
-      "image": "assets/images/student2.jpg",
-    }
-  ];
+  List<Map<String, dynamic>> studentImageFaces = List.generate(10, (index) {
+    return {
+      "action": "face",
+    };
+  });
+
+  Future<bool> isFaceInsideGuideAndAligned(Face face, Size screenSize) {
+    final boundingBox = face.boundingBox;
+
+    // You define your guide box manually based on screen size
+    const double guideWidth = 250;
+    const double guideHeight = 300;
+    final double centerX = screenSize.width / 2;
+    final double centerY = screenSize.height / 2;
+
+    final Rect guideRect = Rect.fromCenter(
+      center: Offset(centerX, centerY),
+      width: guideWidth,
+      height: guideHeight,
+    );
+
+    final bool isInside = guideRect.contains(boundingBox.center);
+
+    final double? yaw = face.headEulerAngleY;
+    final double? roll = face.headEulerAngleZ;
+    final bool isAligned = (yaw ?? 0).abs() < 10 && (roll ?? 0).abs() < 10;
+
+    return Future.value(isInside && isAligned);
+  }
+
   @override
   void initState() {
-    pickedImages = List.filled(studentImageFaces.length, null);
+    pickedImages = List<File?>.generate(studentImageFaces.length, (_) => null);
     super.initState();
   }
 
@@ -62,7 +76,7 @@ class _UploadStudentFaceImageScreenState
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: const AppbarCustomSimple(
-        title: "Upload Student Face Image",
+        title: "Upload Student Face Images",
       ),
       body: Padding(
         padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
@@ -79,18 +93,22 @@ class _UploadStudentFaceImageScreenState
                 padding: const EdgeInsets.all(8.0),
                 itemCount: studentImageFaces.length,
                 itemBuilder: (context, index) {
-                  final student = studentImageFaces[index];
                   return UploadFaceScreen(
-                    name: student["name"],
-                    imagePath: student["image"],
-                    pickedImage: pickedImages[index],
-                    onPickImage: () => _pickImage(ImageSource.camera, index),
-                  );
+                      pickedImage: pickedImages[index],
+                      onPickImage: () => Navigator.pushNamed(
+                          context, FaceScannerPage.routeName)
+
+                      // _pickImage(ImageSource.camera, index),
+                      );
                 },
               ),
             ),
             SafeArea(
-                child: ElevatedBtnCus(onTap: () {}, btnName: "Submit All")),
+              child: ElevatedBtnCus(
+                onTap: () {},
+                btnName: "Submit All",
+              ),
+            ),
           ],
         ),
       ),

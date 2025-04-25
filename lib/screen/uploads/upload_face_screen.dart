@@ -6,14 +6,10 @@ import 'package:tomnenh/widget/upload_image.dart';
 class UploadFaceScreen extends StatelessWidget {
   const UploadFaceScreen({
     super.key,
-    required this.name,
-    required this.imagePath,
     required this.pickedImage,
     required this.onPickImage,
   });
 
-  final String name;
-  final String imagePath;
   final File? pickedImage;
   final VoidCallback onPickImage;
 
@@ -22,7 +18,7 @@ class UploadFaceScreen extends StatelessWidget {
     return UploadImage(
       onTap: onPickImage,
       imgFile: pickedImage,
-      description: name,
+      // description: name,
     );
     ;
   }
