@@ -3,7 +3,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:google_mlkit_face_detection/google_mlkit_face_detection.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:tomnenh/screen/uploads/face_scan_page.dart';
+import 'package:tomnenh/screen/uploads/face_scan_page_v2.dart';
 import 'package:tomnenh/screen/uploads/upload_face_screen.dart';
 import 'package:tomnenh/widget/app_bar_custom_simple.dart';
 import 'package:tomnenh/widget/elevated_btn_cus.dart';
@@ -96,7 +96,7 @@ class _UploadStudentFaceImageScreenState
                   return UploadFaceScreen(
                       pickedImage: pickedImages[index],
                       onPickImage: () => Navigator.pushNamed(
-                          context, FaceScannerPage.routeName)
+                          context, FaceScannerPageV2.routeName)
 
                       // _pickImage(ImageSource.camera, index),
                       );
