@@ -1,10 +1,10 @@
 import 'dart:async';
-import 'dart:io';
 
 import 'package:camera/camera.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:google_ml_kit/google_ml_kit.dart';
+import 'package:tomnenh/screen/uploads/face_from_capture.dart';
 
 class FaceScannerPageV2 extends StatefulWidget {
   const FaceScannerPageV2({super.key});
@@ -22,7 +22,7 @@ class _FaceScannerPageV2State extends State<FaceScannerPageV2> {
   int _lastProcessedTime = 0;
   int _currentInstructionIndex = 0;
   bool _isAligned = false;
-  List<XFile> _capturedImages = [];
+  final List<XFile> _capturedImages = [];
 
   final List<String> _instructions = [
     "Look left",
@@ -106,12 +106,6 @@ class _FaceScannerPageV2State extends State<FaceScannerPageV2> {
         allBytes.putUint8List(plane.bytes);
       }
       final bytes = allBytes.done().buffer.asUint8List();
-      // final rotation = InputImageRotationValue.fromRawValue(
-      //       camera.sensorOrientation,
-      //     ) ??
-      //     InputImageRotation.rotation0deg;
-
-      // Determine image rotation
       InputImageRotation rotation;
       switch (_controller.description.sensorOrientation) {
         case 0:
@@ -296,31 +290,6 @@ class _FaceScannerPageV2State extends State<FaceScannerPageV2> {
             ),
           ),
         ],
-      ),
-    );
-  }
-}
-
-class CapturedImagesPage extends StatelessWidget {
-  final List<XFile> images;
-
-  const CapturedImagesPage({super.key, required this.images});
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: const Text("Captured Images")),
-      body: GridView.builder(
-        padding: const EdgeInsets.all(8),
-        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-          crossAxisCount: 2,
-          mainAxisSpacing: 8,
-          crossAxisSpacing: 8,
-        ),
-        itemCount: images.length,
-        itemBuilder: (context, index) {
-          return Image.file(File(images[index].path));
-        },
       ),
     );
   }
