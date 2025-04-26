@@ -7,7 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:google_ml_kit/google_ml_kit.dart';
 
 class FaceScannerPage extends StatefulWidget {
-  const FaceScannerPage({Key? key}) : super(key: key);
+  const FaceScannerPage({super.key});
   static const String routeName = "scan_face_page";
 
   @override
@@ -18,8 +18,8 @@ class _FaceScannerPageState extends State<FaceScannerPage> {
   late CameraController _controller;
   late FaceDetector _faceDetector;
   XFile? _capturedImage;
-  String _instruction = "Look right";
-  String _currentTargetInstruction = "Look right";
+  String _instruction = "Look up";
+  final String _currentTargetInstruction = "Look up";
   bool _isCameraInitialized = false;
   final bool _isAligned = false;
 
@@ -45,7 +45,7 @@ class _FaceScannerPageState extends State<FaceScannerPage> {
     try {
       final cameras = await availableCameras();
       final frontCamera = cameras.firstWhere(
-        (camera) => camera.lensDirection == CameraLensDirection.back,
+        (camera) => camera.lensDirection == CameraLensDirection.front,
       );
 
       _controller = CameraController(
@@ -106,6 +106,8 @@ class _FaceScannerPageState extends State<FaceScannerPage> {
             final face = faces.first;
             final yaw = face.headEulerAngleY ?? 0;
             bool isAligned = false;
+            final pitch = face.headEulerAngleX ?? 0; // <-- Fix here
+            final roll = face.headEulerAngleZ ?? 0; // <-- And here
 
             switch (_currentTargetInstruction) {
               case "Look left":
@@ -129,6 +131,20 @@ class _FaceScannerPageState extends State<FaceScannerPage> {
                 if (!isAligned &&
                     _instruction != "Please look straight ahead") {
                   _updateInstruction("Please look straight ahead");
+                }
+                break;
+
+              case "Look down":
+                isAligned = pitch < -7; // Now this will work
+                if (!isAligned && _instruction != "Please look down") {
+                  _updateInstruction("Please look down");
+                }
+                break;
+
+              case "Look up":
+                isAligned = pitch > 7; // Now this will work
+                if (!isAligned && _instruction != "Please look up") {
+                  _updateInstruction("Please look up");
                 }
                 break;
             }
@@ -183,7 +199,7 @@ class _FaceScannerPageState extends State<FaceScannerPage> {
         _capturedImage = picture;
         _instruction = "Picture captured!";
       });
-
+      if (!mounted) return;
       showDialog(
         context: context,
         builder: (_) => AlertDialog(
@@ -194,7 +210,7 @@ class _FaceScannerPageState extends State<FaceScannerPage> {
               child: const Text('Retake'),
               onPressed: () {
                 Navigator.of(context).pop();
-                _initializeCamera(); // restart camera
+                _initializeCamera();
               },
             ),
             TextButton(
@@ -236,7 +252,7 @@ class _FaceScannerPageState extends State<FaceScannerPage> {
             right: 20,
             child: Container(
               padding: const EdgeInsets.all(10),
-              color: Colors.black.withOpacity(0.5),
+              color: Colors.black.withValues(alpha: 0.5),
               child: Text(
                 _instruction,
                 style: const TextStyle(fontSize: 20, color: Colors.white),
@@ -252,21 +268,65 @@ class _FaceScannerPageState extends State<FaceScannerPage> {
 
 class FaceGuideOverlay extends StatelessWidget {
   final bool isAligned;
-  const FaceGuideOverlay({Key? key, required this.isAligned}) : super(key: key);
+
+  const FaceGuideOverlay({super.key, required this.isAligned});
 
   @override
   Widget build(BuildContext context) {
     return Center(
-      child: Container(
-        width: 250,
-        height: 300,
-        decoration: BoxDecoration(
-          border: Border.all(
-            color: isAligned ? Colors.green : Colors.red,
-            width: 3,
-          ),
-        ),
+      child: CustomPaint(
+        size:
+            Size.infinite, // This ensures the overlay covers the entire screen
+        painter: FaceShapePainter(isAligned: isAligned),
       ),
     );
+  }
+}
+
+class FaceShapePainter extends CustomPainter {
+  final bool isAligned;
+
+  FaceShapePainter({required this.isAligned});
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    // Step 1: Create a paint for the overlay (outside the face area)
+    final overlayPaint = Paint()
+      ..color = Colors.black.withOpacity(0.7); // Transparent black overlay
+
+    // Step 2: Draw the full screen overlay
+    final fullScreenPath = Path()
+      ..addRect(Rect.fromLTWH(0, 0, size.width, size.height));
+
+    // Step 3: Define the larger face area with a decreased height
+    final faceRect = Rect.fromLTWH(
+      size.width * 0.1, // X position of the face area (left) - reduced margin
+      size.height *
+          0.2, // Y position of the face area (top) - adjusted for better centering
+      size.width * 0.8, // Width of the face area - increased width
+      size.height * 0.5, // Height of the face area - reduced height
+    );
+    final facePath = Path()..addOval(faceRect);
+
+    // Step 4: Cut out the face area from the full screen overlay
+    final clearFacePath =
+        Path.combine(PathOperation.difference, fullScreenPath, facePath);
+
+    // Step 5: Draw the full screen overlay, leaving a clear space for the face
+    canvas.drawPath(clearFacePath, overlayPaint);
+
+    // Step 6: Draw the face border (green for aligned, red for misaligned)
+    final borderPaint = Paint()
+      ..color = isAligned ? Colors.green : Colors.red
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = 8;
+
+    // Draw the face border (an oval around the detected face)
+    canvas.drawPath(facePath, borderPaint);
+  }
+
+  @override
+  bool shouldRepaint(covariant FaceShapePainter oldDelegate) {
+    return oldDelegate.isAligned != isAligned;
   }
 }
