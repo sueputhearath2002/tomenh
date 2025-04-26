@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:math';
 
 import 'package:camera/camera.dart';
 import 'package:flutter/foundation.dart';
@@ -81,6 +82,7 @@ class _FaceScannerPageV2State extends State<FaceScannerPageV2> {
         _instructionText = _instructions[_currentInstructionIndex];
       });
 
+      // Start the camera stream (still mirrored by default)
       await _controller.startImageStream(_processCameraImage);
     } catch (e) {
       print('Error initializing camera: $e');
@@ -89,6 +91,35 @@ class _FaceScannerPageV2State extends State<FaceScannerPageV2> {
       });
     }
   }
+
+  // Future<void> _initializeCamera() async {
+  //   try {
+  //     final cameras = await availableCameras();
+  //     final frontCamera = cameras.firstWhere(
+  //         (camera) => camera.lensDirection == CameraLensDirection.front);
+  //
+  //     _controller = CameraController(
+  //       frontCamera,
+  //       ResolutionPreset.high,
+  //       enableAudio: false,
+  //     );
+  //
+  //     await _controller.initialize();
+  //     if (!mounted) return;
+  //
+  //     setState(() {
+  //       _isCameraInitialized = true;
+  //       _instructionText = _instructions[_currentInstructionIndex];
+  //     });
+  //
+  //     await _controller.startImageStream(_processCameraImage);
+  //   } catch (e) {
+  //     print('Error initializing camera: $e');
+  //     setState(() {
+  //       _instructionText = "Failed to initialize camera.";
+  //     });
+  //   }
+  // }
 
   void _processCameraImage(CameraImage image) async {
     if (_isDetecting) return;
@@ -273,7 +304,11 @@ class _FaceScannerPageV2State extends State<FaceScannerPageV2> {
       appBar: AppBar(title: const Text('Face Scanner')),
       body: Stack(
         children: [
-          CameraPreview(_controller),
+          Transform(
+            alignment: Alignment.center,
+            transform: Matrix4.rotationY(pi), // Flipping horizontally
+            child: CameraPreview(_controller), // Your camera preview widget
+          ),
           FaceGuideOverlay(isAligned: _isAligned),
           Positioned(
             top: 50,

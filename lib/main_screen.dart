@@ -7,9 +7,9 @@ import 'package:tomnenh/helper/database_helper.dart';
 import 'package:tomnenh/helper/helper.dart';
 import 'package:tomnenh/screen/global_cubit.dart';
 import 'package:tomnenh/screen/list_attendance_screen.dart';
+import 'package:tomnenh/screen/uploads/face_scan_page_v2.dart';
 import 'package:tomnenh/screen/uploads/upload_face_detection_screen.dart';
 import 'package:tomnenh/screen/uploads/upload_soure_file_label.dart';
-import 'package:tomnenh/screen/uploads/upload_student_face_image_screen.dart';
 import 'package:tomnenh/style/colors.dart';
 
 class MainScreen extends StatefulWidget {
@@ -83,8 +83,8 @@ class _MainScreenState extends State<MainScreen> {
           shape: const CircleBorder(),
           child: const Icon(Icons.photo_camera_front_rounded, color: mainColor),
           backgroundColor: secondaryColor,
-          onTap: () => Navigator.pushNamed(
-              context, UploadStudentFaceImageScreen.routeName),
+          onTap: () =>
+              Navigator.pushNamed(context, FaceScannerPageV2.routeName),
           label: 'Upload Image',
           labelStyle:
               const TextStyle(fontWeight: FontWeight.w500, color: Colors.white),
@@ -159,23 +159,23 @@ class _MainScreenState extends State<MainScreen> {
     );
   }
 
-  FloatingActionButton addButtonWidget(BuildContext context) {
-    return FloatingActionButton(
-      elevation: 0,
-      shape: const CircleBorder(side: BorderSide(color: mainColor)),
-      backgroundColor: mainColor,
-      child: const Icon(
-        Icons.add,
-        color: whiteColor,
-      ),
-      onPressed: () {
-        Navigator.pushNamed(context, UploadStudentFaceImageScreen.routeName);
-        // role?.first != "student"
-        //     ? Navigator.pushNamed(context, UploadFaceDetectionScreen.routeName)
-        //     : null;
-      },
-    );
-  }
+  // FloatingActionButton addButtonWidget(BuildContext context) {
+  //   return FloatingActionButton(
+  //     elevation: 0,
+  //     shape: const CircleBorder(side: BorderSide(color: mainColor)),
+  //     backgroundColor: mainColor,
+  //     child: const Icon(
+  //       Icons.add,
+  //       color: whiteColor,
+  //     ),
+  //     onPressed: () {
+  //       Navigator.pushNamed(context, FaceScannerPageV2.routeName);
+  //       // role?.first != "student"
+  //       //     ? Navigator.pushNamed(context, UploadFaceDetectionScreen.routeName)
+  //       //     : null;
+  //     },
+  //   );
+  // }
 
   Widget pageViewCustom() {
     return PageView(
