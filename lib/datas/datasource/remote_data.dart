@@ -8,6 +8,7 @@ abstract class RemoteDataSource {
   Future<ApiResponse> register({Map? params});
   Future<ApiResponse> logOutUser();
   Future<ApiResponse> uploadFile({Map? params});
+  Future<ApiResponse> uploadImageStudent({Map? params});
   //
   // //user
   // Future<ApiResponse> getUserProfile({Map? params});

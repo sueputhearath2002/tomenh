@@ -92,35 +92,6 @@ class _FaceScannerPageV2State extends State<FaceScannerPageV2> {
     }
   }
 
-  // Future<void> _initializeCamera() async {
-  //   try {
-  //     final cameras = await availableCameras();
-  //     final frontCamera = cameras.firstWhere(
-  //         (camera) => camera.lensDirection == CameraLensDirection.front);
-  //
-  //     _controller = CameraController(
-  //       frontCamera,
-  //       ResolutionPreset.high,
-  //       enableAudio: false,
-  //     );
-  //
-  //     await _controller.initialize();
-  //     if (!mounted) return;
-  //
-  //     setState(() {
-  //       _isCameraInitialized = true;
-  //       _instructionText = _instructions[_currentInstructionIndex];
-  //     });
-  //
-  //     await _controller.startImageStream(_processCameraImage);
-  //   } catch (e) {
-  //     print('Error initializing camera: $e');
-  //     setState(() {
-  //       _instructionText = "Failed to initialize camera.";
-  //     });
-  //   }
-  // }
-
   void _processCameraImage(CameraImage image) async {
     if (_isDetecting) return;
 
@@ -225,9 +196,9 @@ class _FaceScannerPageV2State extends State<FaceScannerPageV2> {
   ) {
     switch (instruction) {
       case "Look left":
-        return yaw < -15;
-      case "Look right":
         return yaw > 15;
+      case "Look right":
+        return yaw < -15;
       case "Look straight":
         return yaw.abs() < 10 && pitch.abs() < 10;
       case "Look down":
@@ -235,13 +206,13 @@ class _FaceScannerPageV2State extends State<FaceScannerPageV2> {
       case "Look up":
         return pitch > 15;
       case "Tilt head left":
-        return roll < -15;
-      case "Tilt head right":
         return roll > 15;
+      case "Tilt head right":
+        return roll < -15;
       case "Slightly turn left":
-        return yaw < -5 && yaw > -15;
-      case "Slightly turn right":
         return yaw > 5 && yaw < 15;
+      case "Slightly turn right":
+        return yaw < -5 && yaw > -15;
       case "Raise your eyebrows":
         return pitch < -5;
       case "Close your eyes":

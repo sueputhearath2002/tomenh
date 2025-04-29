@@ -49,7 +49,6 @@ class _UploadFaceDetectionScreenState extends State<UploadFaceDetectionScreen> {
   Future<void> _loadModel() async {
     try {
       File? tLifeFile = await Helper.getLocalModelFile('face_detection.tflite');
-
       if (tLifeFile != null) {
         // Load into interpreter
         _interpreter = tfl.Interpreter.fromFile(tLifeFile);

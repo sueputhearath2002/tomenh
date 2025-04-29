@@ -1,0 +1,2 @@
+/Users/sueputhearath/StudioProjects/tomnenh/android/app/.cxx/RelWithDebInfo/405f4045/armeabi-v7a/CMakeFiles/edit_cache.dir
+/Users/sueputhearath/StudioProjects/tomnenh/android/app/.cxx/RelWithDebInfo/405f4045/armeabi-v7a/CMakeFiles/rebuild_cache.dir

@@ -18,11 +18,12 @@ class AuthRepos {
   Future<Either<Failure, RepoResponse<Map>>> login(Map params) async {
     try {
       final result = await source.login(params: params);
+
       if (result.success != true) {
         return Left(ServerFailure(result.msg));
       }
       var record = result.data as Map<String, dynamic>;
-
+      print("sdfasdf====+${record}");
       // final studentJson = record["records"] as Map<String, dynamic>;
       final user = UserModel.fromJson(record);
       final student = user.student;
@@ -32,7 +33,7 @@ class AuthRepos {
       await databaseHelper.insertUser({
         "name": student?.name,
         "email": student?.email,
-        "photo": student?.photo,
+        "photo": student?.photo ?? "",
         "token": token,
         "role": role,
       });
@@ -44,9 +45,8 @@ class AuthRepos {
       ));
     } on ServerException {
       return Left(ServerFailure(errorMessage));
-    } on SocketException {
-      return Left(NetworkFailure(errorInternetMessage));
     } catch (e) {
+      print("======================e${e.toString()}");
       return Left(NetworkFailure(errorInternetMessage));
     }
   }

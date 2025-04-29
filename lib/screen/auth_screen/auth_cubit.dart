@@ -19,6 +19,7 @@ class AuthCubit extends Cubit<AuthState> {
       await authRepos.login(data).then((response) {
         response.fold(
           (l) {
+            print("===============error=======${l.message}");
             Helper.showMessage(msg: l.message);
             success = false;
           },
@@ -32,6 +33,7 @@ class AuthCubit extends Cubit<AuthState> {
       emit(state.copyWith(isLoadingLogin: false));
       return success;
     } catch (e) {
+      print("===============error=======${e.toString()}");
       emit(state.copyWith(isLoadingLogin: false));
       return false;
     }

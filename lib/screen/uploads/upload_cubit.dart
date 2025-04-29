@@ -35,11 +35,41 @@ class UploadCubit extends Cubit<UploadState> {
             success = false;
           },
           (r) {
-            Helper.downloadFile("${r.records['tlife']}",
-                "${r.records['tlife'].split('/').last}");
+            Helper.downloadFile("${r.records['model']}",
+                // r.records['model'].toString().split('/').last,
+                isModel: true);
 
-            Helper.downloadFile("${r.records['label']}",
-                "${r.records['label'].split('/').last}");
+            Helper.downloadFile("${r.records['label']}", isModel: false
+                // r.records['label'].toString().split('/').last,
+                );
+
+            emit(state.copyWith(isLoadingUpload: false));
+            success = true;
+          },
+        );
+      });
+
+      emit(state.copyWith(isLoadingUpload: false));
+      return success;
+    } catch (e) {
+      emit(state.copyWith(isLoadingUpload: false));
+      return false;
+    }
+  }
+
+  Future<bool> uploadImageStudent(Map<String, dynamic> data) async {
+    try {
+      emit(state.copyWith(isLoadingUpload: true));
+      bool success = false;
+
+      await upload.uploadImageStudent(data).then((response) {
+        response.fold(
+          (l) {
+            Helper.showMessage(msg: l.message);
+            success = false;
+          },
+          (r) {
+            print(r.records);
             emit(state.copyWith(isLoadingUpload: false));
             success = true;
           },

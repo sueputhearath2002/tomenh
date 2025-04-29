@@ -19,14 +19,36 @@ class Helper {
     );
   }
 
-  static Future<File> downloadFile(String url, String filename) async {
+  // static Future<File> downloadFile(String url, String filename) async {
+  //   final response = await http.get(Uri.parse(url));
+  //
+  //   if (response.statusCode == 200) {
+  //     // Get the app's documents directory
+  //     final dir = await getApplicationDocumentsDirectory();
+  //
+  //     final file = File('${dir.path}/$filename');
+  //
+  //     if (await file.exists()) {
+  //       await file.delete();
+  //     }
+  //
+  //     await file.writeAsBytes(response.bodyBytes);
+  //
+  //     return file;
+  //   } else {
+  //     throw Exception('Failed to download file');
+  //   }
+  // }
+
+  static Future<File> downloadFile(String url, {required bool isModel}) async {
     final response = await http.get(Uri.parse(url));
 
     if (response.statusCode == 200) {
-      // Get the app's documents directory
       final dir = await getApplicationDocumentsDirectory();
 
-      final file = File('${dir.path}/$filename');
+      // Use fixed file names
+      final String fixedName = isModel ? 'face_detection.tflite' : 'labels.txt';
+      final file = File('${dir.path}/$fixedName');
 
       if (await file.exists()) {
         await file.delete();
