@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:month_picker_dialog/month_picker_dialog.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 import 'package:table_calendar/table_calendar.dart';
@@ -96,6 +97,11 @@ class _DashboardScreenState extends State<DashboardScreen> {
             if (pickedMonth != null) {
               selectedMonthNotifier.value = pickedMonth;
             }
+
+            String formatted =
+                DateFormat('yyyy-MM').format(selectedMonthNotifier.value);
+            print(formatted);
+            print("==============sdfasdfsa========${formatted}");
           },
           child: ValueListenableBuilder<DateTime>(
             valueListenable: selectedMonthNotifier,
