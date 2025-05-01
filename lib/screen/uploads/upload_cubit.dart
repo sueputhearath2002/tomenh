@@ -83,4 +83,30 @@ class UploadCubit extends Cubit<UploadState> {
       return false;
     }
   }
+
+  Future<bool> checkAttendance(List<String> data) async {
+    try {
+      emit(state.copyWith(isLoadingUpload: true));
+      bool success = false;
+
+      await upload.checkAttendance({"students": data}).then((response) {
+        response.fold(
+          (l) {
+            Helper.showMessage(msg: l.message);
+            success = false;
+          },
+          (r) {
+            emit(state.copyWith(isLoadingUpload: false));
+            success = true;
+          },
+        );
+      });
+
+      emit(state.copyWith(isLoadingUpload: false));
+      return success;
+    } catch (e) {
+      emit(state.copyWith(isLoadingUpload: false));
+      return false;
+    }
+  }
 }

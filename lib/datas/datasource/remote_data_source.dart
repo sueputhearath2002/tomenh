@@ -181,4 +181,21 @@ class ImpRemoteDataSource implements RemoteDataSource {
       msg: body["message"] ?? "Error",
     );
   }
+
+  @override
+  Future<ApiResponse> checkAttendance({Map? params}) async {
+    var url = Uri.parse("$domain/student/check-attendance");
+    final result = await client.post(
+      url,
+      body: await getParams(params),
+    );
+    print(await getParams(params));
+
+    final body = json.decode(result.body);
+    return ApiResponse(
+      success: body["success"] ?? false,
+      data: body["data"] ?? [],
+      msg: body["message"] ?? "Error",
+    );
+  }
 }

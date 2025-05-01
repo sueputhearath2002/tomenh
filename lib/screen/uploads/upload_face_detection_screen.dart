@@ -9,6 +9,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:tflite_flutter/tflite_flutter.dart' as tfl;
 import 'package:tomnenh/helper/helper.dart';
+import 'package:tomnenh/screen/uploads/upload_cubit.dart';
 import 'package:tomnenh/style/assets.dart';
 import 'package:tomnenh/style/colors.dart';
 import 'package:tomnenh/widget/app_bar_custom_simple.dart'
@@ -35,6 +36,7 @@ class _UploadFaceDetectionScreenState extends State<UploadFaceDetectionScreen> {
   List<String> _labels = [];
   final ImagePicker _picker = ImagePicker();
   final faceDetector = GoogleMlKit.vision.faceDetector();
+  final screenCubit = UploadCubit();
 
   List<String> listLabels = [];
 
@@ -44,6 +46,17 @@ class _UploadFaceDetectionScreenState extends State<UploadFaceDetectionScreen> {
 
     _loadModel();
     _loadLabels();
+  }
+
+  Future<void> checkAttendance() async {
+    final names = listLabels.map((e) => e.split(' (').first).toList();
+    final result = await screenCubit.checkAttendance(names);
+    if (result) {
+      Helper.showMessage(msg: "Attendance submitted successfully!");
+      if (!mounted) return;
+      Navigator.pop(context);
+    }
+    print("==========================${result}");
   }
 
   Future<void> _loadModel() async {
@@ -184,7 +197,7 @@ class _UploadFaceDetectionScreenState extends State<UploadFaceDetectionScreen> {
       ),
       persistentFooterButtons: [
         ElevatedBtnCus(
-          onTap: () {},
+          onTap: () => checkAttendance(),
           isFullWidth: true,
           btnName: "Submit Attendance",
         ),
@@ -285,7 +298,7 @@ class _UploadFaceDetectionScreenState extends State<UploadFaceDetectionScreen> {
     return Container(
       padding: const EdgeInsets.symmetric(
         horizontal: 16,
-        vertical: 0,
+        vertical: 8,
       ),
       width: double.infinity,
       child: SafeArea(
