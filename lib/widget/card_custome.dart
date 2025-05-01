@@ -5,6 +5,7 @@ class CardCustom extends StatelessWidget {
   const CardCustom({
     super.key,
     this.colorCard = greyColor,
+    this.borderColor = greyColor,
     this.child,
     this.radius = 8,
     this.shadowColor = whiteColor,
@@ -14,6 +15,7 @@ class CardCustom extends StatelessWidget {
   });
   final Color colorCard;
   final Color shadowColor;
+  final Color borderColor;
   final Widget? child;
   final double radius;
   final EdgeInsetsGeometry? margin;
@@ -26,6 +28,7 @@ class CardCustom extends StatelessWidget {
       elevation: 0,
       shadowColor: shadowColor,
       shape: RoundedRectangleBorder(
+        side: BorderSide(color: borderColor, width: 1),
         borderRadius: BorderRadius.circular(radius),
       ),
       margin: margin,

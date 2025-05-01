@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart' show BlocBuilder;
+import 'package:flutter_bloc/flutter_bloc.dart' show BlocBuilder, ReadContext;
 import 'package:tomnenh/main_screen.dart';
 import 'package:tomnenh/screen/auth_screen/auth_cubit.dart';
+import 'package:tomnenh/screen/global_cubit.dart';
 import 'package:tomnenh/style/assets.dart';
 import 'package:tomnenh/style/colors.dart';
 import 'package:tomnenh/widget/my_elevate_btn.dart';
@@ -31,6 +32,7 @@ class LoginScreen extends StatelessWidget {
           context,
           MaterialPageRoute(builder: (context) => const MainScreen()),
           (route) => false);
+      context.read<GlobalCubit>().getInfo();
     }
   }
 

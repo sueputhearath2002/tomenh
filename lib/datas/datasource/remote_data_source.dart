@@ -198,4 +198,50 @@ class ImpRemoteDataSource implements RemoteDataSource {
       msg: body["message"] ?? "Error",
     );
   }
+
+  @override
+  @override
+  Future<ApiResponse> checkAttendanceStudent({Map? params}) async {
+    final UserModel? auth = await DatabaseHelper.instance.getUser();
+
+    if (auth == null) {
+      return ApiResponse(
+        success: false,
+        data: [],
+        msg: "User not logged in",
+      );
+    }
+
+    try {
+      final Uri url = Uri.parse(
+        auth.role?[0] == "admin"
+            ? "$domain/student/admin/filter-attendance-by-date"
+            : "$domain/student/filter-attendance-by-date-student",
+      );
+
+      final result = await client.post(
+        url,
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": "Bearer ${auth.token}",
+        },
+        body: await getParams(params),
+      );
+
+      final body = json.decode(result.body);
+      print("================${body["data"]}");
+
+      return ApiResponse(
+        success: body["success"] ?? false,
+        data: body["data"] ?? [],
+        msg: body["message"] ?? "Error",
+      );
+    } catch (e) {
+      return ApiResponse(
+        success: false,
+        data: [],
+        msg: "Exception: ${e.toString()}",
+      );
+    }
+  }
 }

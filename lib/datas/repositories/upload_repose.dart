@@ -81,4 +81,27 @@ class UploadRepose {
       return Left(NetworkFailure(errorInternetMessage));
     }
   }
+
+  Future<Either<Failure, RepoResponse<Map<String, dynamic>>>>
+      checkAttendanceStudent(Map params) async {
+    try {
+      final result = await source.checkAttendanceStudent(params: params);
+      if (result.success != true) {
+        return Left(ServerFailure(result.msg));
+      }
+      var record = result.data as Map<String, dynamic>;
+
+      return Right(RepoResponse(
+        msg: result.msg,
+        records: record,
+      ));
+    } on ServerException {
+      return Left(ServerFailure(errorMessage));
+    } on SocketException {
+      return Left(NetworkFailure(errorInternetMessage));
+    } catch (e) {
+      print("==============record${e}");
+      return Left(NetworkFailure(errorInternetMessage));
+    }
+  }
 }

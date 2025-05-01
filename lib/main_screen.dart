@@ -108,74 +108,65 @@ class _MainScreenState extends State<MainScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: pageViewCustom(),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-      floatingActionButton: BlocBuilder<GlobalCubit, GlobalState>(
-        builder: (context, state) {
-          final role = context.read<GlobalCubit>().state.user?.role;
-          return Padding(
-            padding: const EdgeInsets.only(top: 30),
-            child: SizedBox(
-              width: 50,
-              height: 50,
-              child: role?.first == "student"
-                  ? buildOptionForStudent()
-                  : buildOptionForAdmin(),
-            ),
-          );
-        },
-      ),
-      bottomNavigationBar: NavigationBar(
-        selectedIndex: selectIndex,
-        elevation: 2,
-        indicatorColor: secondaryColor,
-        surfaceTintColor: whiteColor,
-        backgroundColor: whiteColor,
-        height: 65,
-        onDestinationSelected: (int index) {
-          setState(() {
-            selectIndex = index;
-          });
-          pageController.jumpToPage(selectIndex);
-        },
-        destinations: [
-          NavigationDestination(
-            icon: Icon(
-              Icons.dashboard,
-              color: selectIndex == 0 ? mainColor : textSearchColor,
-            ),
-            label: 'Dashboard',
+    final role = context.read<GlobalCubit>().state.user?.role;
+    return BlocBuilder<GlobalCubit, GlobalState>(
+      builder: (context, state) {
+        return Scaffold(
+          body: pageViewCustom(),
+          floatingActionButtonLocation: role?.first == "student"
+              ? FloatingActionButtonLocation.endFloat
+              : FloatingActionButtonLocation.centerDocked,
+          floatingActionButton: BlocBuilder<GlobalCubit, GlobalState>(
+            builder: (context, state) {
+              if (role?.first == "student") {
+                return buildOptionForStudent();
+              }
+              return Padding(
+                padding: const EdgeInsets.only(top: 30),
+                child: SizedBox(
+                  width: 50,
+                  height: 50,
+                  child: buildOptionForAdmin(),
+                ),
+              );
+            },
           ),
-          NavigationDestination(
-            icon: Icon(
-              Icons.event_note,
-              color: selectIndex == 1 ? mainColor : textSearchColor,
-            ),
-            label: 'Report',
-          ),
-        ],
-      ),
+          bottomNavigationBar: role?.first == "student"
+              ? null
+              : NavigationBar(
+                  selectedIndex: selectIndex,
+                  elevation: 2,
+                  indicatorColor: secondaryColor,
+                  surfaceTintColor: whiteColor,
+                  backgroundColor: whiteColor,
+                  height: 65,
+                  onDestinationSelected: (int index) {
+                    setState(() {
+                      selectIndex = index;
+                    });
+                    pageController.jumpToPage(selectIndex);
+                  },
+                  destinations: [
+                    NavigationDestination(
+                      icon: Icon(
+                        Icons.dashboard,
+                        color: selectIndex == 0 ? mainColor : textSearchColor,
+                      ),
+                      label: 'Dashboard',
+                    ),
+                    NavigationDestination(
+                      icon: Icon(
+                        Icons.event_note,
+                        color: selectIndex == 1 ? mainColor : textSearchColor,
+                      ),
+                      label: 'Report',
+                    ),
+                  ],
+                ),
+        );
+      },
     );
   }
-
-  // FloatingActionButton addButtonWidget(BuildContext context) {
-  //   return FloatingActionButton(
-  //     elevation: 0,
-  //     shape: const CircleBorder(side: BorderSide(color: mainColor)),
-  //     backgroundColor: mainColor,
-  //     child: const Icon(
-  //       Icons.add,
-  //       color: whiteColor,
-  //     ),
-  //     onPressed: () {
-  //       Navigator.pushNamed(context, FaceScannerPageV2.routeName);
-  //       // role?.first != "student"
-  //       //     ? Navigator.pushNamed(context, UploadFaceDetectionScreen.routeName)
-  //       //     : null;
-  //     },
-  //   );
-  // }
 
   Widget pageViewCustom() {
     return PageView(

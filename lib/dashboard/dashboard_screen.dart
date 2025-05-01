@@ -3,7 +3,6 @@ import 'package:intl/intl.dart';
 import 'package:month_picker_dialog/month_picker_dialog.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 import 'package:table_calendar/table_calendar.dart';
-import 'package:tomnenh/screen/card_attendance.dart';
 import 'package:tomnenh/style/assets.dart';
 import 'package:tomnenh/style/colors.dart';
 import 'package:tomnenh/widget/build_card_dasboard.dart';
@@ -136,8 +135,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
         itemCount: 5,
         itemBuilder: (context, index) {
           return const RepaintBoundary(
-            child: CardAttendance(),
-          );
+              // child: CardAttendance(),
+              );
         });
   }
 
