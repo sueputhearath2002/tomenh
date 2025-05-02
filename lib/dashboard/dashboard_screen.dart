@@ -1,8 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 import 'package:month_picker_dialog/month_picker_dialog.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 import 'package:table_calendar/table_calendar.dart';
+import 'package:tomnenh/datas/models/user_model.dart';
+import 'package:tomnenh/screen/card_attendance.dart';
+import 'package:tomnenh/screen/uploads/upload_cubit.dart';
 import 'package:tomnenh/style/assets.dart';
 import 'package:tomnenh/style/colors.dart';
 import 'package:tomnenh/widget/build_card_dasboard.dart';
@@ -53,30 +57,52 @@ class _DashboardScreenState extends State<DashboardScreen> {
     super.initState();
   }
 
+  final screenCubit = UploadCubit();
+
+  void filterAttendanceMonthStudentByAdmin() async {
+    String formatted =
+        DateFormat('yyyy-MM').format(selectedMonthNotifier.value);
+    await screenCubit.filterAttendanceMonthStudentByAdmin(formatted);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       key: _key,
       appBar: const BuildCustomAppbar(),
-      body: ListView(
-        physics: const AlwaysScrollableScrollPhysics(),
-        children: [
-          monthPicker(context),
-          // buildTableCalendar(),
-          buildRowMenu(),
-          const SizedBox(height: 8),
-          ValueListenableBuilder<bool>(
-            valueListenable: chartReady,
-            builder: (_, isReady, __) {
-              if (!isReady) {
-                return const SizedBox(height: 200); // Or loading placeholder
-              }
-              return RepaintBoundary(child: chartWidget());
-            },
-          ),
-          attendanceRecently(),
-          buildListAttendance()
-        ],
+      body: BlocBuilder<UploadCubit, UploadState>(
+        bloc: screenCubit,
+        builder: (context, state) {
+          return ListView(
+            physics: const AlwaysScrollableScrollPhysics(),
+            children: [
+              monthPicker(context),
+              // buildTableCalendar(),
+              buildRowMenu(
+                countTotal: state.totalStudent ?? 0,
+                countAbsent: state.totalAbsent ?? 0,
+              ),
+              const SizedBox(height: 8),
+              ValueListenableBuilder<bool>(
+                valueListenable: chartReady,
+                builder: (_, isReady, __) {
+                  if (!isReady) {
+                    return const SizedBox(
+                        height: 200); // Or loading placeholder
+                  }
+                  return RepaintBoundary(
+                    child: chartWidget(
+                      countTotal: state.totalStudent ?? 0,
+                      countAbsent: state.totalAbsent ?? 0,
+                    ),
+                  );
+                },
+              ),
+              attendanceRecently(),
+              buildListAttendance(state.students ?? [])
+            ],
+          );
+        },
       ),
     );
   }
@@ -95,12 +121,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
             );
             if (pickedMonth != null) {
               selectedMonthNotifier.value = pickedMonth;
+              filterAttendanceMonthStudentByAdmin();
             }
-
-            String formatted =
-                DateFormat('yyyy-MM').format(selectedMonthNotifier.value);
-            print(formatted);
-            print("==============sdfasdfsa========${formatted}");
           },
           child: ValueListenableBuilder<DateTime>(
             valueListenable: selectedMonthNotifier,
@@ -128,40 +150,39 @@ class _DashboardScreenState extends State<DashboardScreen> {
     );
   }
 
-  ListView buildListAttendance() {
+  ListView buildListAttendance(List<Student> students) {
     return ListView.builder(
         shrinkWrap: true,
         physics: const NeverScrollableScrollPhysics(),
-        itemCount: 5,
+        itemCount: students.length,
         itemBuilder: (context, index) {
-          return const RepaintBoundary(
-              // child: CardAttendance(),
-              );
+          return RepaintBoundary(
+            child: CardAttendance(
+              user: students[index],
+            ),
+          );
         });
   }
 
   Padding attendanceRecently() {
-    return const Padding(
-      padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+    String formatted =
+        DateFormat('yyyy-MM').format(selectedMonthNotifier.value);
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           TextWidget(
-            text: "Attendance Recently/(12-Mar-2025)",
+            text: "Attendance Recently  ($formatted)",
           ),
-          Row(
-            children: [
-              TextWidget(
-                text: "More",
-              ),
-            ],
-          )
         ],
       ),
     );
   }
 
-  CardCustom chartWidget() {
+  CardCustom chartWidget({int countTotal = 0, int countAbsent = 0}) {
+    String formatted =
+        DateFormat('yyyy-MM').format(selectedMonthNotifier.value);
     return CardCustom(
       margin: const EdgeInsets.symmetric(horizontal: 16),
       horizontal: 16,
@@ -169,8 +190,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const TextWidget(
-            text: "Attendance (Mar-2025)",
+          TextWidget(
+            text: "Attendance ($formatted)",
           ),
           Row(
             children: [
@@ -182,8 +203,9 @@ class _DashboardScreenState extends State<DashboardScreen> {
                       PieSeries<ChartData, String>(
                         dataSource: [
                           // Bind data source
-                          ChartData('Present', 80, mainColor),
-                          ChartData('Absent', 20, redColor),
+                          ChartData(
+                              'Students', countTotal.toDouble(), mainColor),
+                          ChartData('Absent', countAbsent.toDouble(), redColor),
                         ],
                         xValueMapper: (ChartData data, _) => data.x,
                         yValueMapper: (ChartData data, _) => data.y,
@@ -209,24 +231,24 @@ class _DashboardScreenState extends State<DashboardScreen> {
     );
   }
 
-  CardCustom buildRowMenu() {
-    return const CardCustom(
-      margin: EdgeInsets.symmetric(horizontal: 16),
+  CardCustom buildRowMenu({int countTotal = 0, int countAbsent = 0}) {
+    return CardCustom(
+      margin: const EdgeInsets.symmetric(horizontal: 16),
       child: Row(
         children: [
           BuildCardDasboard(
             icon: studentSvg,
             iconColor: mainColor,
             bgColor: mainColor,
-            label: "Present",
-            value: "70",
+            label: "Students",
+            value: countTotal.toString(),
           ),
           BuildCardDasboard(
             icon: studentSvg,
             bgColor: redColor,
             iconColor: redColor,
             label: "Absent",
-            value: "2",
+            value: countAbsent.toString(),
           ),
         ],
       ),
@@ -286,6 +308,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
 class ChartData {
   ChartData(this.x, this.y, this.color);
+
   final String x;
   final double? y;
   final Color? color;

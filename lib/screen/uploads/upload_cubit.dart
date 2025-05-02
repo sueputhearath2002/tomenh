@@ -149,4 +149,46 @@ class UploadCubit extends Cubit<UploadState> {
       return false;
     }
   }
+
+  Future<bool> filterAttendanceMonthStudentByAdmin(String month) async {
+    print("==================sdfasdf=================${month}");
+    try {
+      emit(state.copyWith(isLoadingUpload: true));
+      bool success = false;
+
+      await upload.filterAttendanceMonthStudentByAdmin({"month": month}).then(
+          (response) {
+        response.fold(
+          (l) {
+            Helper.showMessage(msg: l.message);
+            success = false;
+          },
+          (r) {
+            final records = r.records;
+            final students = records["students"] as List<dynamic>;
+            final List<Student> recordsList = [];
+            for (var a in students) {
+              recordsList.add(Student.fromJson(a));
+            }
+
+            print("====================reiii${records["students"]}");
+            emit(state.copyWith(
+              isLoadingUpload: false,
+              students: recordsList,
+              totalAbsent: records["count"] ?? 0,
+              totalStudent: records["total"] ?? 0,
+            ));
+            success = true;
+          },
+        );
+      });
+
+      emit(state.copyWith(isLoadingUpload: false));
+      return success;
+    } catch (e) {
+      print("=================error=====${e.toString()}");
+      emit(state.copyWith(isLoadingUpload: false));
+      return false;
+    }
+  }
 }

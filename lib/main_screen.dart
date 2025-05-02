@@ -112,7 +112,7 @@ class _MainScreenState extends State<MainScreen> {
     return BlocBuilder<GlobalCubit, GlobalState>(
       builder: (context, state) {
         return Scaffold(
-          body: pageViewCustom(),
+          body: pageViewCustom(role?.first ?? ""),
           floatingActionButtonLocation: role?.first == "student"
               ? FloatingActionButtonLocation.endFloat
               : FloatingActionButtonLocation.centerDocked,
@@ -152,14 +152,14 @@ class _MainScreenState extends State<MainScreen> {
                         Icons.dashboard,
                         color: selectIndex == 0 ? mainColor : textSearchColor,
                       ),
-                      label: 'Dashboard',
+                      label: 'Report',
                     ),
                     NavigationDestination(
                       icon: Icon(
                         Icons.event_note,
                         color: selectIndex == 1 ? mainColor : textSearchColor,
                       ),
-                      label: 'Report',
+                      label: 'Daily',
                     ),
                   ],
                 ),
@@ -168,12 +168,12 @@ class _MainScreenState extends State<MainScreen> {
     );
   }
 
-  Widget pageViewCustom() {
+  Widget pageViewCustom(String role) {
     return PageView(
       physics: const NeverScrollableScrollPhysics(),
       controller: pageController,
-      children:
-          List.generate(listOfWidget.length, (index) => listOfWidget[index]),
+      children: List.generate(listOfWidget.length,
+          (index) => role == "student" ? listOfWidget[1] : listOfWidget[index]),
     );
   }
 }
