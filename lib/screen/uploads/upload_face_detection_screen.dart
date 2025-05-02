@@ -278,7 +278,11 @@ class _UploadFaceDetectionScreenState extends State<UploadFaceDetectionScreen> {
                                   color: Colors.green, size: 18),
                               const SizedBox(width: 8),
                               Text(
-                                listLabels[index].toString(),
+                                RegExp(r'^(.*?)\s*\(')
+                                        .firstMatch(
+                                            listLabels[index].toString())
+                                        ?.group(1) ??
+                                    '',
                                 style: const TextStyle(fontSize: 16),
                                 textAlign: TextAlign.start,
                               ),

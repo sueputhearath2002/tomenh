@@ -50,9 +50,7 @@ class UploadImage extends StatelessWidget {
               )
             : Image.file(
                 imgFile!,
-                width: 200,
-                height: 200,
-                fit: BoxFit.cover,
+                fit: BoxFit.fitHeight,
               ),
       ),
 

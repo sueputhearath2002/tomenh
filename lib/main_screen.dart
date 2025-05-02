@@ -50,8 +50,8 @@ class _MainScreenState extends State<MainScreen> {
         SpeedDialChild(
           elevation: 0,
           shape: const CircleBorder(),
-          child: const Icon(Icons.upload_file_rounded, color: mainColor),
-          backgroundColor: secondaryColor,
+          child: const Icon(Icons.cloud_upload, color: whiteColor),
+          backgroundColor: mainColor,
           onTap: () =>
               Navigator.pushNamed(context, UploadSourceFileLabel.routeName),
           label: 'Upload file',
@@ -62,8 +62,8 @@ class _MainScreenState extends State<MainScreen> {
         SpeedDialChild(
           elevation: 0,
           shape: const CircleBorder(),
-          child: const Icon(Icons.group, color: mainColor),
-          backgroundColor: secondaryColor,
+          child: const Icon(Icons.camera_alt, color: whiteColor),
+          backgroundColor: mainColor,
           onTap: () =>
               Navigator.pushNamed(context, UploadFaceDetectionScreen.routeName),
           label: 'Take Photo',
