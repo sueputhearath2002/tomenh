@@ -64,6 +64,7 @@ class UploadRepose {
     try {
       final result = await source.checkAttendance(params: params);
       if (result.success != true) {
+        print(result.msg);
         return Left(ServerFailure(result.msg));
       }
       var record = result.data as List<dynamic>;

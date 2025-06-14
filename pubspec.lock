@@ -497,7 +497,7 @@ packages:
     source: hosted
     version: "0.14.0"
   google_mlkit_selfie_segmentation:
-    dependency: "direct main"
+    dependency: transitive
     description:
       name: google_mlkit_selfie_segmentation
       sha256: e05fc255265595a0fb11cd6a6a5393f106d6ec4d3a40cbc57ff22894eef235f1

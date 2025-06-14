@@ -48,6 +48,7 @@ class _UploadFaceDetectionScreenState extends State<UploadFaceDetectionScreen> {
 
   Future<void> checkAttendance() async {
     final names = listLabels.map((e) => e.split(' (').first).toList();
+    print("==========================listUserName ==============${names}");
     final result = await screenCubit.checkAttendance(names);
     if (result) {
       Helper.showMessage(msg: "Attendance submitted successfully!");
@@ -112,6 +113,7 @@ class _UploadFaceDetectionScreenState extends State<UploadFaceDetectionScreen> {
 
     _detectedFaces =
         await faceDetector.processImage(InputImage.fromFile(image));
+    print("Number of faces detected: ${_detectedFaces.length}");
 
     if (_detectedFaces.isEmpty) {
       setState(() {
@@ -121,28 +123,44 @@ class _UploadFaceDetectionScreenState extends State<UploadFaceDetectionScreen> {
       return;
     }
 
-    listLabels.clear(); // Clear previous predictions
-    Set<String> uniqueNames = {}; // For checking duplicates
+    listLabels.clear();
     List<String> detectedLabels = [];
+    Set<String> usedNames = {}; // To prevent duplicate predictions
 
-    for (final face in _detectedFaces) {
+    for (int i = 0; i < _detectedFaces.length; i++) {
+      final face = _detectedFaces[i];
       final croppedFace = await _cropFace(image, face);
+
       final input = await _processImage(croppedFace);
       final output = List.generate(1, (_) => List.filled(_labels.length, 0.0));
 
-      _interpreter!.run(input, output);
-      final scores = output[0];
+      _interpreter?.run(input, output);
 
-      for (int i = 0; i < scores.length; i++) {
-        final confidence = scores[i];
-        if (confidence > 0.01) {
-          // Adjusted confidence threshold
-          final name = _labels[i];
-          if (!uniqueNames.contains(name)) {
-            final label = "$name (${(confidence * 100).toStringAsFixed(1)}%)";
-            uniqueNames.add(name);
-            detectedLabels.add(label);
+      final scores = output[0];
+      print("Scores for face $i: $scores");
+
+      List<MapEntry<String, double>> predictions = [];
+
+      for (int j = 0; j < scores.length; j++) {
+        if (scores[j] > 0.001) {
+          final name = _labels[j].replaceAll('pins_', '');
+          if (!usedNames.contains(name)) {
+            predictions.add(MapEntry(name, scores[j]));
           }
+        }
+      }
+
+      predictions.sort((a, b) => b.value.compareTo(a.value));
+
+      if (predictions.isNotEmpty) {
+        final bestPred = predictions.first;
+        usedNames.add(bestPred.key);
+        detectedLabels.add(
+            "${bestPred.key} (${(bestPred.value * 100).toStringAsFixed(1)}%)");
+
+        print("Face $i predictions:");
+        for (var pred in predictions.take(3)) {
+          print("  ${pred.key}: ${(pred.value * 100).toStringAsFixed(1)}%");
         }
       }
     }
@@ -156,48 +174,13 @@ class _UploadFaceDetectionScreenState extends State<UploadFaceDetectionScreen> {
       _predictedLabel = detectedLabels.isEmpty
           ? "No faces confidently detected"
           : detectedLabels.join("\n");
+      listLabels.clear();
       listLabels.addAll(detectedLabels);
     });
 
-    print("Detected Labels: $listLabels");
+    print("Number of predictions: ${detectedLabels.length}");
+    print("Final predictions: $detectedLabels");
   }
-
-  // Future<void> _predictImage(File image) async {
-  //   if (_interpreter == null || _labels.isEmpty) return;
-  //   _detectedFaces =
-  //       await faceDetector.processImage(InputImage.fromFile(image));
-  //   if (_detectedFaces.isEmpty) {
-  //     setState(() => _predictedLabel = "No faces detected");
-  //     return;
-  //   }
-  //
-  //   List<String> detectedFaces = [];
-  //   for (var face in _detectedFaces) {
-  //     var croppedFace = await _cropFace(image, face);
-  //     var input = await _processImage(croppedFace);
-  //     var output = List.generate(1, (_) => List.filled(_labels.length, 0.0));
-  //     _interpreter?.run(input, output);
-  //     List<double> outputList = List<double>.from(output[0]);
-  //     for (int i = 0; i < outputList.length; i++) {
-  //       if (outputList[i] > 0.1) {
-  //         detectedFaces.add(
-  //             "${_labels[i]} (${(outputList[i] * 100).toStringAsFixed(1)}%)");
-  //       }
-  //     }
-  //   }
-  //
-  //   final imgData = await image.readAsBytes();
-  //   final codec = await ui.instantiateImageCodec(imgData);
-  //   final frame = await codec.getNextFrame();
-  //   setState(() {
-  //     _displayImage = frame.image;
-  //     _predictedLabel = detectedFaces.isEmpty
-  //         ? "No faces confidently detected"
-  //         : detectedFaces.join("\n");
-  //     listLabels.addAll(detectedFaces);
-  //   });
-  //   print("===============asda=================$listLabels");
-  // }
 
   Future<File> _cropFace(File image, Face face) async {
     final Uint8List imageData = await image.readAsBytes();
@@ -205,39 +188,174 @@ class _UploadFaceDetectionScreenState extends State<UploadFaceDetectionScreen> {
     if (rawImage == null) throw Exception("Error decoding image");
 
     final rect = face.boundingBox;
-    int x = (rect.left - 20).toInt().clamp(0, rawImage.width);
-    int y = (rect.top - 20).toInt().clamp(0, rawImage.height);
-    int width = (rect.width + 40).toInt().clamp(0, rawImage.width - x);
-    int height = (rect.height + 40).toInt().clamp(0, rawImage.height - y);
+
+    int x = rect.left.toInt().clamp(0, rawImage.width - 1);
+    int y = rect.top.toInt().clamp(0, rawImage.height - 1);
+    int width = rect.width.toInt().clamp(1, rawImage.width - x);
+    int height = rect.height.toInt().clamp(1, rawImage.height - y);
+
     img.Image cropped =
         img.copyCrop(rawImage, x: x, y: y, width: width, height: height);
 
-    final tempPath = '${(await getTemporaryDirectory()).path}/cropped_face.png';
+    final tempPath =
+        '${(await getTemporaryDirectory()).path}/cropped_face_${DateTime.now().millisecondsSinceEpoch}.png';
     return File(tempPath)..writeAsBytesSync(img.encodePng(cropped));
   }
 
+  /// Process the image into 224x224 format and normalize for model input
   Future<List<List<List<List<double>>>>> _processImage(File image) async {
     final Uint8List imageData = await image.readAsBytes();
     img.Image? rawImage = img.decodeImage(imageData);
     if (rawImage == null) throw Exception("Error decoding image");
 
+    // Resize image to model input size
     img.Image resizedImage = img.copyResize(rawImage, width: 224, height: 224);
+
+    // Normalize pixel values to [0, 1] — adjust depending on your model
     List<List<List<double>>> inputImage = List.generate(
       224,
       (y) => List.generate(
         224,
         (x) {
-          var pixel = resizedImage.getPixel(x, y);
+          final pixel = resizedImage.getPixel(x, y);
           return [
-            (pixel.r - 128) / 128,
-            (pixel.g - 128) / 128,
-            (pixel.b - 128) / 128,
+            pixel.r / 255.0,
+            pixel.g / 255.0,
+            pixel.b / 255.0,
           ];
         },
       ),
     );
-    return [inputImage];
+
+    return [inputImage]; // model expects 4D: [1, 224, 224, 3]
   }
+
+  // ==================================================old===
+
+  // Future<void> _predictImage(File image) async {
+  //   if (_interpreter == null || _labels.isEmpty) {
+  //     setState(() {
+  //       _predictedLabel = "Model or labels not loaded.";
+  //       _displayImage = null;
+  //     });
+  //     return;
+  //   }
+  //
+  //   _detectedFaces =
+  //       await faceDetector.processImage(InputImage.fromFile(image));
+  //   print("Number of faces detected: ${_detectedFaces.length}");
+  //
+  //   if (_detectedFaces.isEmpty) {
+  //     setState(() {
+  //       _predictedLabel = "No faces detected";
+  //       _displayImage = null;
+  //     });
+  //     return;
+  //   }
+  //
+  //   listLabels.clear();
+  //   List<String> detectedLabels = [];
+  //   Set<String> usedNames = {}; // Track used names
+  //
+  //   // Process each face separately
+  //   for (int i = 0; i < _detectedFaces.length; i++) {
+  //     final face = _detectedFaces[i];
+  //     final croppedFace = await _cropFace(image, face);
+  //     final input = await _processImage(croppedFace);
+  //     final output = List.generate(1, (_) => List.filled(_labels.length, 0.0));
+  //
+  //     _interpreter?.run(input, output);
+  //     final scores = output[0];
+  //     print("Scores for face $i: $scores");
+  //
+  //     // Get all predictions above threshold for this face
+  //     List<MapEntry<String, double>> predictions = [];
+  //     for (int j = 0; j < scores.length; j++) {
+  //       if (scores[j] > 0.03) {
+  //         // Lower threshold to see more candidates
+  //         final name = _labels[j].replaceAll('pins_', '');
+  //         if (!usedNames.contains(name)) {
+  //           // Only consider unused names
+  //           predictions.add(MapEntry(name, scores[j]));
+  //         }
+  //       }
+  //     }
+  //
+  //     // Sort predictions by confidence
+  //     predictions.sort((a, b) => b.value.compareTo(a.value));
+  //
+  //     // Take best unused prediction
+  //     if (predictions.isNotEmpty) {
+  //       final bestPred = predictions.first;
+  //       usedNames.add(bestPred.key); // Mark name as used
+  //       detectedLabels.add(
+  //           "${bestPred.key} (${(bestPred.value * 100).toStringAsFixed(1)}%)");
+  //
+  //       // Debug print all considered predictions for this face
+  //       print("Face $i predictions:");
+  //       for (var pred in predictions.take(3)) {
+  //         print("  ${pred.key}: ${(pred.value * 100).toStringAsFixed(1)}%");
+  //       }
+  //     }
+  //   }
+  //
+  //   final imageBytes = await image.readAsBytes();
+  //   final codec = await ui.instantiateImageCodec(imageBytes);
+  //   final frame = await codec.getNextFrame();
+  //
+  //   setState(() {
+  //     _displayImage = frame.image;
+  //     _predictedLabel = detectedLabels.isEmpty
+  //         ? "No faces confidently detected"
+  //         : detectedLabels.join("\n");
+  //     listLabels.clear();
+  //     listLabels.addAll(detectedLabels);
+  //   });
+  //
+  //   print("Number of faces detected: ${_detectedFaces.length}");
+  //   print("Number of predictions: ${detectedLabels.length}");
+  //   print("Final predictions: $detectedLabels");
+  // }
+
+  // Future<File> _cropFace(File image, Face face) async {
+  //   final Uint8List imageData = await image.readAsBytes();
+  //   img.Image? rawImage = img.decodeImage(imageData);
+  //   if (rawImage == null) throw Exception("Error decoding image");
+  //
+  //   final rect = face.boundingBox;
+  //   int x = (rect.left - 20).toInt().clamp(0, rawImage.width);
+  //   int y = (rect.top - 20).toInt().clamp(0, rawImage.height);
+  //   int width = (rect.width + 40).toInt().clamp(0, rawImage.width - x);
+  //   int height = (rect.height + 40).toInt().clamp(0, rawImage.height - y);
+  //   img.Image cropped =
+  //       img.copyCrop(rawImage, x: x, y: y, width: width, height: height);
+  //
+  //   final tempPath = '${(await getTemporaryDirectory()).path}/cropped_face.png';
+  //   return File(tempPath)..writeAsBytesSync(img.encodePng(cropped));
+  // }
+  //
+  // Future<List<List<List<List<double>>>>> _processImage(File image) async {
+  //   final Uint8List imageData = await image.readAsBytes();
+  //   img.Image? rawImage = img.decodeImage(imageData);
+  //   if (rawImage == null) throw Exception("Error decoding image");
+  //
+  //   img.Image resizedImage = img.copyResize(rawImage, width: 224, height: 224);
+  //   List<List<List<double>>> inputImage = List.generate(
+  //     224,
+  //     (y) => List.generate(
+  //       224,
+  //       (x) {
+  //         var pixel = resizedImage.getPixel(x, y);
+  //         return [
+  //           (pixel.r - 128) / 128,
+  //           (pixel.g - 128) / 128,
+  //           (pixel.b - 128) / 128,
+  //         ];
+  //       },
+  //     ),
+  //   );
+  //   return [inputImage];
+  // }
 
   @override
   void dispose() {

@@ -184,12 +184,27 @@ class ImpRemoteDataSource implements RemoteDataSource {
 
   @override
   Future<ApiResponse> checkAttendance({Map? params}) async {
+    final UserModel? auth = await DatabaseHelper.instance.getUser();
+
+    if (auth == null) {
+      return ApiResponse(
+        success: false,
+        data: [],
+        msg: "User not logged in",
+      );
+    }
+
+    
     var url = Uri.parse("$domain/student/check-attendance");
     final result = await client.post(
       url,
+      headers: {
+          "Content-Type": "application/json",
+          "Authorization": "Bearer ${auth.token}",
+        },
       body: await getParams(params),
     );
-    print(await getParams(params));
+
 
     final body = json.decode(result.body);
     return ApiResponse(

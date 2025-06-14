@@ -48,12 +48,12 @@ dependencies:
   google_mlkit_face_detection: ^0.13.1
   google_ml_kit: ^0.20.0
   google_mlkit_commons: ^0.11.0
-  image: ^4.3.0
+  image: ^4.0.17
   path_provider: ^2.1.5
   month_picker_dialog: ^6.0.3
   get_it: ^7.2.0
   tflite_flutter: ^0.11.0
-  google_mlkit_selfie_segmentation: ^0.10.0
+  # google_mlkit_selfie_segmentation: ^0.10.0
   equatable: ^2.0.5
   http: ^1.2.2
   camera: ^0.11.1

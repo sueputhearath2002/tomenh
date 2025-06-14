@@ -9,6 +9,7 @@ import 'package:tomnenh/screen/global_cubit.dart';
 import 'package:tomnenh/screen/list_attendance_screen.dart';
 import 'package:tomnenh/screen/uploads/face_scan_page_v2.dart';
 import 'package:tomnenh/screen/uploads/upload_face_detection_screen.dart';
+import 'package:tomnenh/screen/uploads/upload_face_detection_v2.dart';
 import 'package:tomnenh/screen/uploads/upload_soure_file_label.dart';
 import 'package:tomnenh/style/colors.dart';
 
@@ -66,6 +67,8 @@ class _MainScreenState extends State<MainScreen> {
           backgroundColor: mainColor,
           onTap: () =>
               Navigator.pushNamed(context, UploadFaceDetectionScreen.routeName),
+              // Navigator.pushNamed(context, FaceDetectionApp.routeName),
+              
           label: 'Take Photo',
           labelStyle:
               const TextStyle(fontWeight: FontWeight.w500, color: Colors.white),
@@ -90,18 +93,18 @@ class _MainScreenState extends State<MainScreen> {
               const TextStyle(fontWeight: FontWeight.w500, color: Colors.white),
           labelBackgroundColor: mainColor,
         ),
-        SpeedDialChild(
-          elevation: 0,
-          shape: const CircleBorder(),
-          child: const Icon(Icons.edit_calendar, color: mainColor),
-          backgroundColor: secondaryColor,
-          onTap: () =>
-              Navigator.pushNamed(context, UploadFaceDetectionScreen.routeName),
-          label: 'Leave Request',
-          labelStyle:
-              const TextStyle(fontWeight: FontWeight.w500, color: Colors.white),
-          labelBackgroundColor: mainColor,
-        ),
+        // SpeedDialChild(
+        //   elevation: 0,
+        //   shape: const CircleBorder(),
+        //   child: const Icon(Icons.edit_calendar, color: mainColor),
+        //   backgroundColor: secondaryColor,
+        //   onTap: () =>
+        //       Navigator.pushNamed(context, UploadFaceDetectionScreen.routeName),
+        //   label: 'Leave Request',
+        //   labelStyle:
+        //       const TextStyle(fontWeight: FontWeight.w500, color: Colors.white),
+        //   labelBackgroundColor: mainColor,
+        // ),
       ],
     );
   }
